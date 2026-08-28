@@ -29,34 +29,36 @@
       <!-- CỘT TRÁI: FORM NHẬP DỮ LIỆU (5 cols) -->
       <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-4">
         
-        <!-- Ô nhập Gemini API Key -->
+        <!-- Ô nhập Gemini API Key (chỉ lưu nội bộ trên từng trình duyệt bằng localStorage) -->
         <div>
-          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key</label>
+          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key (Lưu riêng trên trình duyệt này)</label>
           <input type="password" id="apiKey" placeholder="AIzaSy..." 
                  class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+          <span class="text-[11px] text-slate-400 mt-1 block">Khóa API được lưu cục bộ trên máy này và không bị gửi đi nơi khác.</span>
         </div>
 
         <hr class="border-slate-100" />
 
-        <!-- Họ tên GV & Tổ chuyên môn (dùng Datalist vừa chọn menu sẵn vừa gõ tùy ý) -->
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên giáo viên</label>
-            <input type="text" id="teacherName" value="Hoàng Xuân Định"
-                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Tổ chuyên môn</label>
-            <input type="text" id="departmentName" list="departmentList" value="TOÁN - SINH - CÔNG NGHỆ"
-                   placeholder="Chọn hoặc nhập tên tổ..."
-                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-700 uppercase" />
-            <datalist id="departmentList">
-              <option value="TOÁN - SINH - CÔNG NGHỆ"></option>
-              <option value="TOÁN - TIN"></option>
-              <option value="TOÁN"></option>
-              <option value="KHOA HỌC TỰ NHIÊN"></option>
-            </datalist>
-          </div>
+        <!-- Ô 1: Họ và tên GV -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">1. Họ và tên giáo viên</label>
+          <input type="text" id="teacherName" value="Hoàng Xuân Định"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+        </div>
+
+        <!-- Ô 2: Tổ chuyên môn (Hiển thị trực diện, có gợi ý và sửa trực tiếp) -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">2. Tổ chuyên môn</label>
+          <input type="text" id="departmentName" list="departmentList" value="TOÁN - SINH - CÔNG NGHỆ"
+                 placeholder="Gõ hoặc chọn tổ chuyên môn..."
+                 class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold text-blue-900 uppercase bg-blue-50/40" />
+          <datalist id="departmentList">
+            <option value="TOÁN - SINH - CÔNG NGHỆ"></option>
+            <option value="TOÁN - TIN"></option>
+            <option value="TOÁN"></option>
+            <option value="KHOA HỌC TỰ NHIÊN"></option>
+          </datalist>
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Mặc định là <b>TOÁN - SINH - CÔNG NGHỆ</b> (có thể nhấp vào để sửa hoặc chọn).</span>
         </div>
 
         <!-- Khối lớp, Số tiết tùy chỉnh (1-9), Mật độ NLS -->
@@ -161,7 +163,8 @@
   <script>
     lucide.createIcons();
 
-    document.getElementById('apiKey').value = localStorage.getItem('gemini_api_key') || '';
+    // Chỉ lấy API Key được lưu riêng trong LocalStorage của trình duyệt hiện tại
+    document.getElementById('apiKey').value = localStorage.getItem('local_gemini_api_key') || '';
 
     function buildFullPrompt(params) {
       return `Hãy đóng vai là một chuyên gia phương pháp giảng dạy môn Toán THPT và là lập trình viên LaTeX giỏi. Hãy biên soạn một Kế hoạch bài dạy (Giáo án) môn Toán định dạng mã nguồn LaTeX hoàn chỉnh.
@@ -255,10 +258,11 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
     async function generateLessonPlan() {
       const apiKey = document.getElementById('apiKey').value.trim();
       if (!apiKey) {
-        alert('Vui lòng nhập Gemini API Key.');
+        alert('Vui lòng nhập Gemini API Key của bạn để sử dụng trên trình duyệt này.');
         return;
       }
-      localStorage.setItem('gemini_api_key', apiKey);
+      // Lưu API Key riêng biệt trên bộ nhớ máy cục bộ của trình duyệt hiện tại
+      localStorage.setItem('local_gemini_api_key', apiKey);
 
       const durationVal = parseInt(document.getElementById('duration').value) || 1;
       const durationClamped = Math.max(1, Math.min(9, durationVal));
