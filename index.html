@@ -38,7 +38,7 @@
 
         <hr class="border-slate-100" />
 
-        <!-- Họ tên GV & Tổ chuyên môn -->
+        <!-- Họ tên GV & Tổ chuyên môn (dùng Datalist vừa chọn menu sẵn vừa gõ tùy ý) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên giáo viên</label>
@@ -47,9 +47,15 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Tổ chuyên môn</label>
-            <input type="text" id="departmentName" value="TOÁN - SINH - CÔNG NGHỆ"
-                   placeholder="Ví dụ: TOÁN - SINH - CÔNG NGHỆ..."
-                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none uppercase font-medium text-slate-700" />
+            <input type="text" id="departmentName" list="departmentList" value="TOÁN - SINH - CÔNG NGHỆ"
+                   placeholder="Chọn hoặc nhập tên tổ..."
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-700 uppercase" />
+            <datalist id="departmentList">
+              <option value="TOÁN - SINH - CÔNG NGHỆ"></option>
+              <option value="TOÁN - TIN"></option>
+              <option value="TOÁN"></option>
+              <option value="KHOA HỌC TỰ NHIÊN"></option>
+            </datalist>
           </div>
         </div>
 
@@ -220,9 +226,6 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
 3. Đảm bảo mã LaTeX biên dịch chuẩn với các gói: tcolorbox, tabularx, amsmath, geometry.`;
     }
 
-    /**
-     * Bộ lọc tự động làm sạch và sửa các lỗi cú pháp LaTeX phổ biến
-     */
     function sanitizeLatexCode(latex) {
       let fixed = latex.replace(/\\begin\s*(\d+)\./g, '+ $1.');
       fixed = fixed.replace(/\\end\s*(\d+)\./g, '');
