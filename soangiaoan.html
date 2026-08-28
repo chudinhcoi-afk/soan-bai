@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soạn Kế Hoạch Bài Dạy Toán THPT (KNTT) - Tích Hợp NLS</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    
+    <!-- HEADER TRANG WEB -->
+    <header class="mb-8 text-center">
+      <h1 class="text-3xl font-bold text-blue-800 tracking-tight flex items-center justify-center gap-2">
+        <i data-lucide="file-code" class="w-8 h-8"></i>
+        Hệ Thống Tạo Giáo Án Toán THPT (KNTT - NLS)
+      </h1>
+      <p class="text-slate-600 mt-2 text-sm">
+        Bộ sách <strong>Kết nối tri thức với cuộc sống</strong> - Chuẩn hóa mã nguồn LaTeX
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- CỘT TRÁI: FORM NHẬP DỮ LIỆU (5 cols) -->
+      <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-4">
+        
+        <!-- Ô nhập Gemini API Key -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key</label>
+          <input type="password" id="apiKey" placeholder="AIzaSy..." 
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+        </div>
+
+        <hr class="border-slate-100" />
+
+        <!-- Họ tên GV -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên giáo viên</label>
+          <input type="text" id="teacherName" value="Hoàng Xuân Định"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+        </div>
+
+        <!-- Khối lớp, Số tiết tùy chỉnh (1-9), Mật độ NLS -->
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Khối lớp</label>
+            <select id="gradeLevel" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+              <option value="Toán 10 (KNTT)" selected>Toán 10</option>
+              <option value="Toán 11 (KNTT)">Toán 11</option>
+              <option value="Toán 12 (KNTT)">Toán 12</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Số tiết (1 - 9)</label>
+            <input type="number" id="duration" min="1" max="9" value="4"
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-center font-semibold" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Mật độ NLS</label>
+            <select id="nlsDensity" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+              <option value="Vừa phải (1-2 hoạt động then chốt)" selected>Vừa phải</option>
+              <option value="Tối thiểu (Chỉ củng cố/mở rộng)">Tối thiểu</option>
+              <option value="Chuyên sâu (Ứng dụng liên tục)">Chuyên sâu</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tên bài học -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Tên bài dạy</label>
+          <input type="text" id="lessonName" value="Mệnh đề"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+        </div>
+
+        <!-- Nguồn ngữ liệu SGK KNTT -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Link SGK / Nguồn ngữ liệu tham khảo</label>
+          <input type="url" id="sourceUrl" value="https://toanmath.com/2022/01/sach-giao-khoa-toan-10-tap-1-ket-noi-tri-thuc-voi-cuoc-song.html"
+                 placeholder="Dán link SGK hoặc tài liệu tham khảo..."
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-blue-700" />
+        </div>
+
+        <!-- Công cụ số -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Công cụ / Học liệu số sử dụng</label>
+          <input type="text" id="digitalTools" value="GeoGebra, Casio fx-880BTG, Azota, Quizizz, ChatGPT"
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+        </div>
+
+        <!-- Nội dung trọng tâm -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Nội dung trọng tâm / Yêu cầu cần đạt</label>
+          <textarea id="coreContent" rows="3"
+                    class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                    placeholder="Nhập yêu cầu cần đạt hoặc các mạch kiến thức chính...">- Nhận biết mệnh đề, mệnh đề chứa biến.
+- Phủ định của mệnh đề; mệnh đề kéo theo, tương đương.
+- Sử dụng kí hiệu với mọi (\forall) và tồn tại (\exists).
+- Vận dụng vào các bài toán logic và kiểm tra tính đúng/sai.</textarea>
+        </div>
+
+        <!-- Nút Tạo Giáo Án -->
+        <button id="btnGenerate" onclick="generateLessonPlan()"
+                class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-all flex items-center justify-center gap-2 shadow">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          Tạo Giáo Án LaTeX
+        </button>
+
+      </div>
+
+      <!-- CỘT PHẢI: HIỂN THỊ KẾT QUẢ LATEX (7 cols) -->
+      <div class="lg:col-span-7 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col">
+        
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+            <i data-lucide="terminal" class="w-4 h-4 text-slate-500"></i>
+            Mã nguồn LaTeX
+          </span>
+          <button id="btnCopy" onclick="copyLatex()" disabled
+                  class="px-3 py-1.5 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded text-xs font-medium flex items-center gap-1.5 transition-all disabled:opacity-50">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            Sao chép
+          </button>
+        </div>
+
+        <div class="relative flex-1 min-h-[520px]">
+          <textarea id="outputLatex" readonly
+                    class="w-full h-full p-4 font-mono text-xs text-slate-100 bg-slate-900 rounded-lg outline-none resize-none border border-slate-800"
+                    placeholder="Mã nguồn LaTeX hoàn chỉnh sẽ hiển thị tại đây..."></textarea>
+          
+          <!-- Loading overlay -->
+          <div id="loadingOverlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm rounded-lg hidden flex-col items-center justify-center text-white gap-3">
+            <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-medium">Đang khởi tạo kế hoạch bài dạy...</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    document.getElementById('apiKey').value = localStorage.getItem('gemini_api_key') || '';
+
+    function buildFullPrompt(params) {
+      return `Hãy đóng vai là một chuyên gia phương pháp giảng dạy môn Toán THPT và là lập trình viên LaTeX giỏi. Hãy biên soạn một Kế hoạch bài dạy (Giáo án) môn Toán định dạng mã nguồn LaTeX hoàn chỉnh.
+
+==================================================
+QUY TẮC CÚ PHÁP LATEX TUYỆT ĐỐI TUÂN THỦ (TRÁNH LỖI BIÊN DỊCH)
+==================================================
+1. TUYỆT ĐỐI KHÔNG gõ nhầm lệnh \\begin dính với số hoặc chữ cái (Ví dụ TUYỆT ĐỐI CẤM: \\begin1., \\begin2., \\begin a.,...). Để liệt kê các bước trong hộp nhiemvu, dùng dấu gạch đầu dòng "+" kèm dấu xuống dòng "\\\\" hoặc dùng môi trường chuẩn "\\begin{enumerate} \\item ... \\end{enumerate}".
+2. TUYỆT ĐỐI KHÔNG dùng ký tự "&" đơn lẻ ngoài môi trường bảng biểu (tabular, tabularx) hoặc toán hệ (align, cases). Muốn in ký tự "&" ra chữ thường phải viết là "\\&".
+3. TUYỆT ĐỐI KHÔNG tự bịa đặt tên trường/trung tâm. Khối Header chỉ dùng mẫu chuẩn:
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\textbf{TỔ: TOÁN - TIN}\\par
+    \\textbf{GV thực hiện:} ${params.teacherName}
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\raggedleft
+    \\textbf{KẾ HOẠCH BÀI DẠY MÔN TOÁN}\\par
+    \\textit{Định hướng tích hợp Năng lực số}
+\\end{minipage}
+
+==================================================
+THÔNG TIN BÀI DẠY
+==================================================
+1. Bộ sách: KẾT NỐI TRI THỨC VỚI CUỘC SỐNG (${params.gradeLevel})
+2. Link nguồn SGK tham khảo: ${params.sourceUrl}
+3. Tên bài học: ${params.lessonName}
+4. Giáo viên: ${params.teacherName}
+5. Thời lượng: ${params.duration} tiết (Phân chia đầy đủ và chi tiết từ Tiết 1 đến Tiết ${params.duration})
+6. Mật độ NLS: ${params.nlsDensity}
+7. Công cụ số: ${params.digitalTools}
+8. Nội dung trọng tâm:
+${params.coreContent}
+
+==================================================
+NGUYÊN TẮC SƯ PHẠM VÀ NỘI DUNG TOÁN HỌC
+==================================================
+1. TUYỆT ĐỐI KHÔNG dùng cụm từ "Phương pháp truyền thống".
+2. Trình bày sâu về BẢN CHẤT TOÁN HỌC: Định nghĩa, định lý, biến đổi đại số, lập luận hình học/logic, bài giải mẫu chi tiết. Trích dẫn chính xác hoạt động SGK KNTT (HĐ1, HĐ2, Luyện tập, Vận dụng, Bài tập...).
+3. Tích hợp NLS linh hoạt, đúng chỗ (GeoGebra, Casio fx-880BTG, Quizizz, Azota, ChatGPT). Phần nào giảng dạy lý thuyết bình thường thì soạn chuẩn mực sư phạm toán học, không gán NLS gượng ép.
+
+==================================================
+BẢNG TRA CỨU KHUNG NĂNG LỰC SỐ (DÙNG ĐỂ GÁN MÃ)
+==================================================
+I. Khai thác dữ liệu & thông tin: 1.1, 1.2, 1.3
+II. Giao tiếp & hợp tác trong môi trường số: 2.1, 2.2, 2.4, 2.5
+III. Sáng tạo nội dung số: 3.1, 3.2, 3.4
+IV. An toàn: 4.1, 4.2, 4.3
+V. Giải quyết vấn đề: 5.2, 5.3
+VI. Ứng dụng AI: 6.1, 6.2, 6.3
+
+==================================================
+YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
+==================================================
+1. Chỉ xuất ra DUY NHẤT một block code LaTeX hoàn chỉnh.
+2. Cấu trúc 4 phần chuẩn:
+   - I. MỤC TIÊU: (Yêu cầu cần đạt, Năng lực toán học, Năng lực chung, Năng lực số [chỉ ghi mã thực tế có dùng], Phẩm chất).
+   - II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU.
+   - III. TIẾN TRÌNH DẠY HỌC: Phân chia đủ ${params.duration} tiết. Mỗi tiết đủ: Khởi động, Nội dung chính, Củng cố, Vận dụng/Mở rộng. Phần giao nhiệm vụ nằm trong \\begin{nhiemvu} ... \\end{nhiemvu}.
+   - IV. BẢNG PHÂN TÍCH PHÁT TRIỂN NLS: Bảng tổng hợp các hoạt động CÓ TÍCH HỢP NLS trong giáo án.
+3. Đảm bảo mã LaTeX biên dịch chuẩn với các gói: tcolorbox, tabularx, amsmath, geometry.`;
+    }
+
+    /**
+     * Bộ lọc tự động làm sạch và sửa các lỗi cú pháp LaTeX phổ biến
+     */
+    function sanitizeLatexCode(latex) {
+      // 1. Sửa lỗi gõ dính lệnh \begin với số (ví dụ: \begin1., \begin2. -> + 1., + 2.)
+      let fixed = latex.replace(/\\begin\s*(\d+)\./g, '+ $1.');
+      fixed = fixed.replace(/\\end\s*(\d+)\./g, '');
+
+      // 2. Sửa lỗi ký tự & đứng trần ngoài môi trường bảng biểu / toán
+      const lines = fixed.split('\n');
+      let insideMathOrTable = false;
+
+      const cleanedLines = lines.map(line => {
+        if (/\\begin\{(tabular|tabularx|array|align|cases|matrix|bmatrix|pmatrix|vmatrix)\}/.test(line)) {
+          insideMathOrTable = true;
+          return line;
+        }
+        if (/\\end\{(tabular|tabularx|array|align|cases|matrix|bmatrix|pmatrix|vmatrix)\}/.test(line)) {
+          insideMathOrTable = false;
+          return line;
+        }
+
+        if (!insideMathOrTable) {
+          return line.replace(/(?<!\\)&/g, '\\&');
+        }
+        return line;
+      });
+
+      return cleanedLines.join('\n');
+    }
+
+    async function generateLessonPlan() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      if (!apiKey) {
+        alert('Vui lòng nhập Gemini API Key.');
+        return;
+      }
+      localStorage.setItem('gemini_api_key', apiKey);
+
+      const durationVal = parseInt(document.getElementById('duration').value) || 1;
+      const durationClamped = Math.max(1, Math.min(9, durationVal));
+
+      const params = {
+        teacherName: document.getElementById('teacherName').value.trim(),
+        gradeLevel: document.getElementById('gradeLevel').value,
+        duration: durationClamped,
+        nlsDensity: document.getElementById('nlsDensity').value,
+        lessonName: document.getElementById('lessonName').value.trim(),
+        sourceUrl: document.getElementById('sourceUrl').value.trim(),
+        digitalTools: document.getElementById('digitalTools').value.trim(),
+        coreContent: document.getElementById('coreContent').value.trim()
+      };
+
+      const prompt = buildFullPrompt(params);
+      const loading = document.getElementById('loadingOverlay');
+      const output = document.getElementById('outputLatex');
+      const btnCopy = document.getElementById('btnCopy');
+      const btnGen = document.getElementById('btnGenerate');
+
+      loading.classList.remove('hidden');
+      btnGen.disabled = true;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.2
+            }
+          })
+        });
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+
+        let latexCode = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        latexCode = latexCode.replace(/^```latex\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '');
+        
+        // Chạy qua bộ lọc làm sạch lỗi cú pháp
+        latexCode = sanitizeLatexCode(latexCode);
+
+        output.value = latexCode;
+        btnCopy.disabled = false;
+      } catch (err) {
+        alert('Lỗi khi gọi API: ' + err.message);
+      } finally {
+        loading.classList.add('hidden');
+        btnGen.disabled = false;
+      }
+    }
+
+    function copyLatex() {
+      const output = document.getElementById('outputLatex');
+      navigator.clipboard.writeText(output.value);
+      alert('Đã sao chép toàn bộ mã nguồn LaTeX vào clipboard!');
+    }
+  </script>
+</body>
+</html>
