@@ -17,7 +17,7 @@
     <header class="mb-8 text-center">
       <h1 class="text-3xl font-bold text-blue-800 tracking-tight flex items-center justify-center gap-2">
         <i data-lucide="file-code" class="w-8 h-8"></i>
-        Hệ Thống Soạn Giáo Án Toán THPT (KNTT - NLS)
+        Hệ Thống Tạo Giáo Án Toán THPT (KNTT - NLS)
       </h1>
       <p class="text-slate-600 mt-2 text-sm">
         Bộ sách <strong>Kết nối tri thức với cuộc sống</strong> - Chuẩn hóa mã nguồn LaTeX
@@ -47,8 +47,8 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Tổ chuyên môn</label>
-            <input type="text" id="departmentName" value="TOÁN - TIN"
-                   placeholder="Ví dụ: TOÁN, TOÁN - TIN..."
+            <input type="text" id="departmentName" value="TOÁN - SINH - CÔNG NGHỆ"
+                   placeholder="Ví dụ: TOÁN - SINH - CÔNG NGHỆ..."
                    class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none uppercase font-medium text-slate-700" />
           </div>
         </div>
@@ -252,7 +252,7 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
     async function generateLessonPlan() {
       const apiKey = document.getElementById('apiKey').value.trim();
       if (!apiKey) {
-        alert('Nhập Gemini API Key.');
+        alert('Vui lòng nhập Gemini API Key.');
         return;
       }
       localStorage.setItem('gemini_api_key', apiKey);
