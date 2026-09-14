@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soạn Kế Hoạch Bài Dạy Toán THPT (KNTT) - Tích Hợp NLS</title>
+  <title>Soạn Kế Hoạch Bài Dạy Toán THPT (KNTT) - Tích Hợp NLS & PPCT</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -11,16 +11,16 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="max-w-7xl mx-auto px-4 py-8">
     
     <!-- HEADER TRANG WEB -->
     <header class="mb-8 text-center">
       <h1 class="text-3xl font-bold text-blue-800 tracking-tight flex items-center justify-center gap-2">
         <i data-lucide="file-code" class="w-8 h-8"></i>
-        Hệ Thống Tạo Giáo Án Toán THPT (KNTT - NLS)
+        Hệ Thống Tạo Giáo Án Toán THPT (KNTT - NLS - STEM)
       </h1>
       <p class="text-slate-600 mt-2 text-sm">
-        Bộ sách <strong>Kết nối tri thức với cuộc sống</strong> - Chuẩn hóa mã nguồn LaTeX
+        Bộ sách <strong>Kết nối tri thức với cuộc sống</strong> — Tích hợp Khung Năng Lực Số &amp; PPCT chuẩn
       </p>
     </header>
 
@@ -29,101 +29,124 @@
       <!-- CỘT TRÁI: FORM NHẬP DỮ LIỆU (5 cols) -->
       <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-4">
         
-        <!-- Ô nhập Gemini API Key (chỉ lưu nội bộ trên từng trình duyệt bằng localStorage) -->
+        <!-- API Key -->
         <div>
-          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key (Lưu riêng trên trình duyệt này)</label>
+          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key</label>
           <input type="password" id="apiKey" placeholder="AIzaSy..." 
                  class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-          <span class="text-[11px] text-slate-400 mt-1 block">Khóa API được lưu cục bộ trên máy này và không bị gửi đi nơi khác.</span>
+          <span class="text-[11px] text-slate-400 mt-1 block">Khóa API được lưu cục bộ trên trình duyệt này.</span>
         </div>
 
         <hr class="border-slate-100" />
 
-        <!-- Ô 1: Họ và tên GV -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1">1. Họ và tên giáo viên</label>
-          <input type="text" id="teacherName" value="Hoàng Xuân Định"
-                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-        </div>
-
-        <!-- Ô 2: Tổ chuyên môn (Hiển thị trực diện, có gợi ý và sửa trực tiếp) -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1">2. Tổ chuyên môn</label>
-          <input type="text" id="departmentName" list="departmentList" value="TOÁN - SINH - CÔNG NGHỆ"
-                 placeholder="Gõ hoặc chọn tổ chuyên môn..."
-                 class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold text-blue-900 uppercase bg-blue-50/40" />
-          <datalist id="departmentList">
-            <option value="TOÁN - SINH - CÔNG NGHỆ"></option>
-            <option value="TOÁN - TIN"></option>
-            <option value="TOÁN"></option>
-            <option value="KHOA HỌC TỰ NHIÊN"></option>
-          </datalist>
-          <span class="text-[11px] text-slate-500 mt-0.5 block">Mặc định là <b>TOÁN - SINH - CÔNG NGHỆ</b> (có thể nhấp vào để sửa hoặc chọn).</span>
-        </div>
-
-        <!-- Khối lớp, Số tiết tùy chỉnh (1-9), Mật độ NLS -->
-        <div class="grid grid-cols-3 gap-3">
+        <!-- Họ tên GV & Tổ chuyên môn -->
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Khối lớp</label>
-            <select id="gradeLevel" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-              <option value="Toán 10 (KNTT)" selected>Toán 10</option>
-              <option value="Toán 11 (KNTT)">Toán 11</option>
-              <option value="Toán 12 (KNTT)">Toán 12</option>
-            </select>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Họ và tên giáo viên</label>
+            <input type="text" id="teacherName" value="Hoàng Xuân Định"
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Số tiết (1 - 9)</label>
-            <input type="number" id="duration" min="1" max="9" value="4"
-                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-center font-semibold" />
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tổ chuyên môn</label>
+            <input type="text" id="departmentName" list="departmentList" value="TOÁN - SINH - CÔNG NGHỆ"
+                   class="w-full px-3 py-2 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-blue-900 uppercase bg-blue-50/30" />
+            <datalist id="departmentList">
+              <option value="TOÁN - SINH - CÔNG NGHỆ"></option>
+              <option value="TOÁN - TIN"></option>
+              <option value="TOÁN"></option>
+              <option value="KHOA HỌC TỰ NHIÊN"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <!-- Khối lớp & Chọn bài học theo PPCT -->
+        <div class="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-3">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="col-span-1">
+              <label class="block text-xs font-bold text-blue-900 mb-1">Khối lớp</label>
+              <select id="gradeLevel" onchange="onGradeChange()" class="w-full px-2.5 py-2 border rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                <option value="Toán 12 (KNTT)" selected>Toán 12</option>
+                <option value="Toán 11 (KNTT)">Toán 11</option>
+                <option value="Toán 10 (KNTT)">Toán 10</option>
+              </select>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-blue-900 mb-1">Chọn bài theo PPCT</label>
+              <select id="ppctLessonSelect" onchange="onLessonSelectChange()" class="w-full px-2 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-700 font-medium">
+                <!-- Javascript sẽ nạp danh sách bài học tương ứng -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Tên bài học hiển thị / tùy chỉnh -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tên bài dạy thực tế</label>
+            <input type="text" id="lessonName" value="Bài 5. Ứng dụng đạo hàm để giải quyết một số vấn đề liên quan đến thực tiễn"
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
+          </div>
+
+          <!-- Mã Năng Lực Số theo PPCT và Dự án STEM -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-blue-900">Mã NLS/GD TTNT theo PPCT</label>
+              <span class="text-[10px] text-blue-600 bg-blue-100/80 px-2 py-0.5 rounded font-mono">Tự động gán</span>
+            </div>
+            <input type="text" id="nlsCode" value="6.1.NC1a / 12.C4.MR3"
+                   placeholder="VD: 6.1.NC1a, 5.2.NC1b..."
+                   class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm font-mono font-bold text-blue-700 bg-white focus:ring-2 focus:ring-blue-500 outline-none" />
+            <div id="stemNotice" class="text-[11px] text-emerald-700 font-medium mt-1.5 flex items-center gap-1.5 bg-emerald-50 p-2 rounded border border-emerald-200">
+              <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
+              <span id="stemNoticeText">Bài học có tích hợp Dự án STEM: Kĩ sư Bao bì - Thiết kế vỏ hộp tối ưu.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Số tiết & Mật độ -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Số tiết (1 - 9)</label>
+            <input type="number" id="duration" min="1" max="9" value="3"
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-center font-bold text-slate-800" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Mật độ NLS</label>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mật độ NLS</label>
             <select id="nlsDensity" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-              <option value="Vừa phải (1-2 hoạt động then chốt)" selected>Vừa phải</option>
+              <option value="Vừa phải (1-2 hoạt động then chốt)" selected>Vừa phải (Chuẩn)</option>
               <option value="Tối thiểu (Chỉ củng cố/mở rộng)">Tối thiểu</option>
-              <option value="Chuyên sâu (Ứng dụng liên tục)">Chuyên sâu</option>
+              <option value="Chuyên sâu (Ứng dụng liên tục/STEM)">Chuyên sâu (STEM)</option>
             </select>
           </div>
-        </div>
-
-        <!-- Tên bài học -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Tên bài dạy</label>
-          <input type="text" id="lessonName" value="Mệnh đề"
-                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-        </div>
-
-        <!-- Nguồn ngữ liệu SGK KNTT -->
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Link SGK / Nguồn ngữ liệu tham khảo</label>
-          <input type="url" id="sourceUrl" value="https://toanmath.com/2022/01/sach-giao-khoa-toan-10-tap-1-ket-noi-tri-thuc-voi-cuoc-song.html"
-                 placeholder="Dán link SGK hoặc tài liệu tham khảo..."
-                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none text-blue-700" />
         </div>
 
         <!-- Công cụ số -->
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Công cụ / Học liệu số sử dụng</label>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Công cụ / Học liệu số sử dụng</label>
           <input type="text" id="digitalTools" value="GeoGebra, Casio fx-880BTG, Azota, Quizizz, ChatGPT"
                  class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
         </div>
 
-        <!-- Nội dung trọng tâm -->
+        <!-- Nguồn ngữ liệu SGK -->
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Nội dung trọng tâm / Yêu cầu cần đạt</label>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Link SGK / Tài liệu tham khảo</label>
+          <input type="url" id="sourceUrl" value="https://toanmath.com/2022/01/sach-giao-khoa-toan-10-tap-1-ket-noi-tri-thuc-voi-cuoc-song.html"
+                 class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-blue-500 outline-none text-blue-700" />
+        </div>
+
+        <!-- Yêu cầu cần đạt / Nội dung trọng tâm -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nội dung trọng tâm &amp; Yêu cầu cần đạt</label>
           <textarea id="coreContent" rows="3"
-                    class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
-                    placeholder="Nhập yêu cầu cần đạt hoặc các mạch kiến thức chính...">- Nhận biết mệnh đề, mệnh đề chứa biến.
-- Phủ định của mệnh đề; mệnh đề kéo theo, tương đương.
-- Sử dụng kí hiệu với mọi (\forall) và tồn tại (\exists).
-- Vận dụng vào các bài toán logic và kiểm tra tính đúng/sai.</textarea>
+                    class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                    placeholder="Nhập yêu cầu cần đạt hoặc các mạch kiến thức chính...">- Ứng dụng đạo hàm và khảo sát hàm số để giải quyết bài toán tối ưu hóa chi phí sản xuất trong thực tiễn.
+- Xây dựng mô hình toán học cho thể tích, diện tích toàn phần hình hộp, hình trụ.
+- Ứng dụng công cụ số (GeoGebra/Máy tính Casio) kiểm chứng cực trị và thiết kế sản phẩm thực tế.</textarea>
         </div>
 
         <!-- Nút Tạo Giáo Án -->
         <button id="btnGenerate" onclick="generateLessonPlan()"
-                class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-all flex items-center justify-center gap-2 shadow">
+                class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-sm transition-all flex items-center justify-center gap-2 shadow">
           <i data-lucide="sparkles" class="w-4 h-4"></i>
-          Tạo Giáo Án LaTeX
+          Tạo Giáo Án LaTeX Chuẩn Hóa
         </button>
 
       </div>
@@ -134,24 +157,24 @@
         <div class="flex items-center justify-between mb-3">
           <span class="text-sm font-semibold text-slate-700 flex items-center gap-2">
             <i data-lucide="terminal" class="w-4 h-4 text-slate-500"></i>
-            Mã nguồn LaTeX
+            Mã nguồn LaTeX Hoàn Chỉnh
           </span>
           <button id="btnCopy" onclick="copyLatex()" disabled
                   class="px-3 py-1.5 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded text-xs font-medium flex items-center gap-1.5 transition-all disabled:opacity-50">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            Sao chép
+            Sao chép mã
           </button>
         </div>
 
-        <div class="relative flex-1 min-h-[520px]">
+        <div class="relative flex-1 min-h-[560px]">
           <textarea id="outputLatex" readonly
-                    class="w-full h-full p-4 font-mono text-xs text-slate-100 bg-slate-900 rounded-lg outline-none resize-none border border-slate-800"
-                    placeholder="Mã nguồn LaTeX hoàn chỉnh sẽ hiển thị tại đây..."></textarea>
+                    class="w-full h-full p-4 font-mono text-xs text-slate-100 bg-slate-900 rounded-lg outline-none resize-none border border-slate-800 leading-relaxed"
+                    placeholder="Mã nguồn LaTeX hoàn chỉnh chuẩn bị biên dịch sẽ xuất hiện tại đây..."></textarea>
           
           <!-- Loading overlay -->
           <div id="loadingOverlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm rounded-lg hidden flex-col items-center justify-center text-white gap-3">
             <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-sm font-medium">Đang khởi tạo kế hoạch bài dạy...</span>
+            <span class="text-sm font-medium">Đang sinh kế hoạch bài dạy chuẩn phân phối chương trình...</span>
           </div>
         </div>
 
@@ -161,10 +184,177 @@
   </div>
 
   <script>
+    // DỮ LIỆU PPCT & NĂNG LỰC SỐ ĐƯỢC TRÍCH XUẤT CHUẨN XÁC TỪ CÁC PHỤ LỤC ẢNH
+    const PPCT_DATABASE = {
+      "Toán 12 (KNTT)": [
+        { name: "Bài 1. Tính đơn điệu và cực trị của hàm số", periods: 6, nls: "1.1.NC1b", stem: "" },
+        { name: "Bài 2. Giá trị lớn nhất và giá trị nhỏ nhất của hàm số", periods: 3, nls: "2.2.NC1b", stem: "" },
+        { name: "Bài 3. Đường tiệm cận của đồ thị hàm số", periods: 4, nls: "2.1.NC1a", stem: "" },
+        { name: "Bài 4. Khảo sát sự biến thiên và vẽ đồ thị hàm số", periods: 5, nls: "1.1.NC1b", stem: "" },
+        { 
+          name: "Bài 5. Ứng dụng đạo hàm để giải quyết một số vấn đề liên quan đến thực tiễn", 
+          periods: 3, 
+          nls: "6.1.NC1a / 12.C4.MR3", 
+          stem: "Chủ đề/Dự án 6: Kĩ sư Bao bì - Bài toán thiết kế vỏ hộp tối ưu (Vật liệu & Chi phí tối thiểu)" 
+        },
+        { name: "Bài tập cuối chương I", periods: 2, nls: "1.2.NC1a", stem: "" },
+        { name: "Bài 6. Vectơ trong không gian", periods: 5, nls: "3.1.NC1a", stem: "" },
+        { name: "Bài 7. Hệ trục tọa độ trong không gian", periods: 3, nls: "3.1.NC1a", stem: "" },
+        { name: "Bài 8. Biểu thức tọa độ của các phép toán vectơ", periods: 4, nls: "1.1.NC1b", stem: "" },
+        { name: "Bài tập cuối chương II", periods: 2, nls: "6.1.NC1a", stem: "" },
+        { name: "Bài 9. Khoảng biến thiên và khoảng tứ phân vị", periods: 2, nls: "1.1.NC1a", stem: "" },
+        { name: "Bài 10. Phương sai và độ lệch chuẩn", periods: 2, nls: "6.3.NC1a / 12.C4.MR1", stem: "" },
+        { name: "Bài tập cuối chương III", periods: 1, nls: "1.2.NC1a", stem: "" },
+        { name: "HĐ Trải nghiệm: Khảo sát và vẽ đồ thị hàm số với phần mềm GeoGebra", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "HĐ Trải nghiệm: Vẽ vectơ tổng của ba vectơ trong không gian bằng GeoGebra", periods: 1, nls: "5.2.NC1b", stem: "" },
+        { name: "HĐ Trải nghiệm: Độ dài gang tay của bạn dài bao nhiêu?", periods: 1, nls: "1.3.NC1a", stem: "" },
+        { name: "Bài 11. Nguyên hàm", periods: 5, nls: "3.1.NC1a", stem: "" },
+        { name: "Bài 12. Tích phân", periods: 6, nls: "1.1.NC1b", stem: "" },
+        { 
+          name: "Bài 13. Ứng dụng hình học của tích phân", 
+          periods: 5, 
+          nls: "1.2.NC1a", 
+          stem: "Chủ đề/Dự án 7: Thiết kế Hình dáng Gốm sứ bằng Tích phân (Thiết kế Vật thể tròn xoay / in 3D)" 
+        },
+        { name: "Bài tập cuối chương IV", periods: 2, nls: "5.1.NC1a", stem: "" },
+        { name: "Bài 14. Phương trình mặt phẳng", periods: 4, nls: "2.1.NC1a", stem: "" },
+        { name: "Bài 15. Phương trình đường thẳng trong không gian", periods: 4, nls: "2.1.NC1a", stem: "" },
+        { name: "Bài 16. Công thức tính góc trong không gian", periods: 2, nls: "6.1.NC1a", stem: "" },
+        { name: "Bài 17. Phương trình mặt cầu", periods: 2, nls: "2.1.NC1a", stem: "" },
+        { name: "Bài tập cuối chương V", periods: 2, nls: "6.1.NC1a", stem: "" },
+        { name: "Bài 18. Xác suất có điều kiện", periods: 4, nls: "3.1.NC1a", stem: "" },
+        { name: "Bài 19. Công thức xác suất toàn phần và công thức Bayes", periods: 3, nls: "1.2.NC1a", stem: "" },
+        { name: "Bài tập cuối chương VI", periods: 2, nls: "3.1.NC1a", stem: "" },
+        { name: "HĐ Trải nghiệm: Tính nguyên hàm & tích phân với GeoGebra (hình thang)", periods: 1, nls: "5.2.NC1b", stem: "" },
+        { name: "HĐ Trải nghiệm: Vẽ đồ họa 3D với phần mềm GeoGebra", periods: 1, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 1: Bài 1. Biến ngẫu nhiên rời rạc và các số đặc trưng", periods: 3, nls: "1.3.NC1a", stem: "" },
+        { name: "Chuyên đề 1: Bài 2. Biến ngẫu nhiên có phân phối nhị thức và áp dụng", periods: 4, nls: "1.3.NC1a", stem: "" },
+        { name: "Chuyên đề 2: Bài 3. Vận dụng hệ BPT bậc nhất hai ẩn giải bài toán quy hoạch tuyến tính", periods: 3, nls: "3.1.NC1a, 5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 2: Bài 4. Vận dụng đạo hàm để giải quyết một số bài toán tối ưu", periods: 4, nls: "6.3.NC1b / 12.D1.1", stem: "" },
+        { name: "Chuyên đề 3: Bài 5. Tiền tệ. Lãi suất", periods: 4, nls: "1.3.NC1a", stem: "" },
+        { name: "Chuyên đề 3: Bài 6. Tín dụng. Vay nợ", periods: 4, nls: "1.3.NC1a", stem: "" },
+        { name: "Chuyên đề 3: Bài 7. Đầu tư tài chính. Lập kế hoạch tài chính cá nhân", periods: 4, nls: "1.3.NC1a", stem: "" }
+      ],
+      "Toán 11 (KNTT)": [
+        { 
+          name: "Bài 3. Hàm số lượng giác", 
+          periods: 3, 
+          nls: "5.2.NC1b", 
+          stem: "Chủ đề/Dự án 4: Thiết kế hệ thống tay quay con trượt (Mô hình pít-tông động cơ)" 
+        },
+        { 
+          name: "Chương VII - Quan hệ vuông góc trong không gian", 
+          periods: 4, 
+          nls: "5.2.NC1b", 
+          stem: "Chủ đề/Dự án 5: Thiết kế Mô hình nhà chống lũ (Kiến trúc sinh thái, kết cấu chịu lực)" 
+        },
+        { name: "Chương VII: Khoảng cách", periods: 3, nls: "6.1.NC1a", stem: "" },
+        { name: "Chương VII: Thể tích", periods: 2, nls: "6.1.NC1a", stem: "" },
+        { name: "Ôn tập chương VII", periods: 1, nls: "5.1.NC1a", stem: "" },
+        { name: "Chương VIII: Biến cố hợp, biến cố giao, biến cố độc lập", periods: 3, nls: "1.1.NC1a", stem: "" },
+        { name: "Chương VIII: Công thức cộng xác suất", periods: 3, nls: "5.2.NC1b", stem: "" },
+        { name: "Chương VIII: Công thức nhân xác suất cho hai biến cố độc lập", periods: 2, nls: "3.1.NC1a", stem: "" },
+        { name: "Chương IX: Định nghĩa và ý nghĩa của đạo hàm", periods: 2, nls: "1.1.NC1b", stem: "" },
+        { name: "Chương IX: Các quy tắc tính đạo hàm", periods: 3, nls: "6.1.NC1a / 11.C5.1; 11C5.2", stem: "" },
+        { name: "Chương IX: Đạo hàm cấp hai", periods: 1, nls: "1.2.NC1a", stem: "" },
+        { name: "HĐ Trải nghiệm: Một vài mô hình toán học sử dụng hàm số mũ và hàm số lôgarit", periods: 1, nls: "6.1.NC1a", stem: "" },
+        { name: "HĐ Trải nghiệm: Hoạt động thực hành trải nghiệm hình học", periods: 2, nls: "1.1.NC1b", stem: "" },
+        { name: "Chuyên đề 1: Phép tịnh tiến", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 1: Phép đối xứng trục", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 1: Phép quay và phép đối xứng tâm", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 1: Phép vị tự", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 2: Đường đi Euler và đường đi Hamilton", periods: 3, nls: "1.1.NC1b", stem: "" },
+        { name: "Chuyên đề 2: Bài toán tìm đường đi tối ưu trong một số trường hợp đơn giản", periods: 3, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 3: Hình chiếu vuông góc và hình chiếu trục đo", periods: 4, nls: "5.2.NC1b", stem: "" },
+        { name: "Chuyên đề 3: Bản vẽ kĩ thuật", periods: 4, nls: "5.2.NC1b", stem: "" }
+      ],
+      "Toán 10 (KNTT)": [
+        { 
+          name: "Bài 6. Hệ thức lượng trong tam giác", 
+          periods: 4, 
+          nls: "1.1.NC1a, 5.2.NC1b", 
+          stem: "Chủ đề/Dự án 1: Chế tạo Giác kế (Clinometer) và Ứng dụng đo đạc thực tế" 
+        },
+        { 
+          name: "Bài 22 / Chuyên đề 3: Ba đường Conic (Parabol)", 
+          periods: 3, 
+          nls: "5.2.NC1b", 
+          stem: "Chủ đề/Dự án 2: Bếp năng lượng mặt trời Parabol (hoặc Đèn pin gom sáng)" 
+        },
+        { 
+          name: "Bài 22 / Chuyên đề 3: Ba đường Conic (Elip)", 
+          periods: 3, 
+          nls: "5.2.NC1b", 
+          stem: "Chủ đề/Dự án 3: Mô hình Bàn Bi-a Elip (hoặc Phòng thì thầm)" 
+        },
+        { name: "Mệnh đề", periods: 3, nls: "1.1.NC1a, 2.1.NC1a", stem: "" },
+        { name: "Tập hợp và các phép toán trên tập hợp", periods: 3, nls: "1.1.NC1a", stem: "" },
+        { name: "Bất phương trình bậc nhất hai ẩn", periods: 2, nls: "5.2.NC1b", stem: "" },
+        { name: "Hệ bất phương trình bậc nhất hai ẩn", periods: 3, nls: "5.2.NC1b", stem: "" }
+      ]
+    };
+
     lucide.createIcons();
 
-    // Chỉ lấy API Key được lưu riêng trong LocalStorage của trình duyệt hiện tại
+    // Khởi tạo trạng thái ban đầu
     document.getElementById('apiKey').value = localStorage.getItem('local_gemini_api_key') || '';
+    
+    function populateLessonList() {
+      const grade = document.getElementById('gradeLevel').value;
+      const lessonSelect = document.getElementById('ppctLessonSelect');
+      lessonSelect.innerHTML = '';
+
+      const lessons = PPCT_DATABASE[grade] || [];
+      lessons.forEach((l, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = l.name;
+        lessonSelect.appendChild(opt);
+      });
+
+      // Thêm mục tùy biến khác
+      const customOpt = document.createElement('option');
+      customOpt.value = 'custom';
+      customOpt.textContent = '-- Bài học khác (Nhập thủ công) --';
+      lessonSelect.appendChild(customOpt);
+
+      onLessonSelectChange();
+    }
+
+    function onGradeChange() {
+      populateLessonList();
+    }
+
+    function onLessonSelectChange() {
+      const grade = document.getElementById('gradeLevel').value;
+      const selectVal = document.getElementById('ppctLessonSelect').value;
+      const stemNotice = document.getElementById('stemNotice');
+      const stemNoticeText = document.getElementById('stemNoticeText');
+
+      if (selectVal === 'custom') {
+        document.getElementById('lessonName').value = '';
+        document.getElementById('nlsCode').value = '';
+        stemNotice.classList.add('hidden');
+        return;
+      }
+
+      const lessonData = PPCT_DATABASE[grade][parseInt(selectVal)];
+      if (lessonData) {
+        document.getElementById('lessonName').value = lessonData.name;
+        document.getElementById('duration').value = lessonData.periods;
+        document.getElementById('nlsCode').value = lessonData.nls;
+
+        if (lessonData.stem) {
+          stemNotice.classList.remove('hidden');
+          stemNoticeText.textContent = lessonData.stem;
+        } else {
+          stemNotice.classList.add('hidden');
+        }
+      }
+    }
+
+    // Nạp lần đầu
+    populateLessonList();
 
     function buildFullPrompt(params) {
       return `Hãy đóng vai là một chuyên gia phương pháp giảng dạy môn Toán THPT và là lập trình viên LaTeX giỏi. Hãy biên soạn một Kế hoạch bài dạy (Giáo án) môn Toán định dạng mã nguồn LaTeX hoàn chỉnh.
@@ -183,11 +373,11 @@ QUY TẮC CÚ PHÁP LATEX TUYỆT ĐỐI TUÂN THỦ (TRÁNH LỖI BIÊN DỊCH)
 \\begin{minipage}[t]{0.48\\textwidth}
     \\raggedleft
     \\textbf{KẾ HOẠCH BÀI DẠY MÔN TOÁN}\\par
-    \\textit{Định hướng tích hợp Năng lực số}
+    \\textit{Định hướng tích hợp Năng lực số (NLS) - Phân phối chương trình}
 \\end{minipage}
 
 ==================================================
-THÔNG TIN BÀI DẠY
+THÔNG TIN BÀI DẠY (THEO PHÂN PHỐI CHƯƠNG TRÌNH & CHUẨN NLS)
 ==================================================
 1. Bộ sách: KẾT NỐI TRI THỨC VỚI CUỘC SỐNG (${params.gradeLevel})
 2. Link nguồn SGK tham khảo: ${params.sourceUrl}
@@ -196,36 +386,41 @@ THÔNG TIN BÀI DẠY
 5. Tổ chuyên môn: ${params.departmentName}
 6. Thời lượng: ${params.duration} tiết (Phân chia đầy đủ và chi tiết từ Tiết 1 đến Tiết ${params.duration})
 7. Mật độ NLS: ${params.nlsDensity}
-8. Công cụ số: ${params.digitalTools}
-9. Nội dung trọng tâm:
+8. MÃ NĂNG LỰC SỐ / GD TTNT CỦA BÀI THEO PPCT: "${params.nlsCode}"
+${params.stemInfo ? `9. DỰ ÁN STEM / THỰC TIỄN LIÊN QUAN: ${params.stemInfo}` : ''}
+10. Công cụ số sử dụng: ${params.digitalTools}
+11. Nội dung trọng tâm & Yêu cầu cần đạt:
 ${params.coreContent}
 
 ==================================================
 NGUYÊN TẮC SƯ PHẠM VÀ NỘI DUNG TOÁN HỌC
 ==================================================
 1. TUYỆT ĐỐI KHÔNG dùng cụm từ "Phương pháp truyền thống".
-2. Trình bày sâu về BẢN CHẤT TOÁN HỌC: Định nghĩa, định lý, biến đổi đại số, lập luận hình học/logic, bài giải mẫu chi tiết. Trích dẫn chính xác hoạt động SGK KNTT (HĐ1, HĐ2, Luyện tập, Vận dụng, Bài tập...).
-3. Tích hợp NLS linh hoạt, đúng chỗ (GeoGebra, Casio fx-880BTG, Quizizz, Azota, ChatGPT). Phần nào giảng dạy lý thuyết bình thường thì soạn chuẩn mực sư phạm toán học, không gán NLS gượng ép.
+2. Trình bày sâu về BẢN CHẤT TOÁN HỌC: Định nghĩa, định lý, biến đổi đại số, lập luận hình học/logic, bài giải mẫu chi tiết. Trích dẫn chính xác hoạt động SGK KNTT (Khởi động, HĐ, Luyện tập, Vận dụng, Bài tập...).
+3. Tích hợp năng lực số dựa chính xác trên MÃ NLS TRỌNG TÂM CỦA BÀI (${params.nlsCode}):
+   - Đưa đúng mã này vào phần I. Mục tiêu (Mục Năng lực số).
+   - Thiết kế hoạt động học tập (sử dụng ${params.digitalTools}) thể hiện rõ học sinh đạt được mã NLS này.
+   ${params.stemInfo ? `- Tích hợp và làm nổi bật nội dung dự án STEM: "${params.stemInfo}" vào tiến trình dạy học.` : ''}
 
 ==================================================
-BẢNG TRA CỨU KHUNG NĂNG LỰC SỐ (DÙNG ĐỂ GÁN MÃ)
+BẢNG TRA CỨU KHUNG NĂNG LỰC SỐ (DÙNG ĐỐI CHIẾU MÃ TRONG BÀI)
 ==================================================
-I. Khai thác dữ liệu & thông tin: 1.1, 1.2, 1.3
+I. Khai thác dữ liệu & thông tin: 1.1, 1.2, 1.3 (NC1a, NC1b)
 II. Giao tiếp & hợp tác trong môi trường số: 2.1, 2.2, 2.4, 2.5
 III. Sáng tạo nội dung số: 3.1, 3.2, 3.4
 IV. An toàn: 4.1, 4.2, 4.3
-V. Giải quyết vấn đề: 5.2, 5.3
-VI. Ứng dụng AI: 6.1, 6.2, 6.3
+V. Giải quyết vấn đề: 5.1, 5.2, 5.3
+VI. Ứng dụng Trí tuệ nhân tạo (AI): 6.1, 6.2, 6.3
 
 ==================================================
 YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
 ==================================================
-1. Chỉ xuất ra DUY NHẤT một block code LaTeX hoàn chỉnh.
+1. Chỉ xuất ra DUY NHẤT một block code LaTeX hoàn chỉnh (từ \\documentclass đến \\end{document}).
 2. Cấu trúc 4 phần chuẩn:
-   - I. MỤC TIÊU: (Yêu cầu cần đạt, Năng lực toán học, Năng lực chung, Năng lực số [chỉ ghi mã thực tế có dùng], Phẩm chất).
-   - II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU.
-   - III. TIẾN TRÌNH DẠY HỌC: Phân chia đủ ${params.duration} tiết. Mỗi tiết đủ: Khởi động, Nội dung chính, Củng cố, Vận dụng/Mở rộng. Phần giao nhiệm vụ nằm trong \\begin{nhiemvu} ... \\end{nhiemvu}.
-   - IV. BẢNG PHÂN TÍCH PHÁT TRIỂN NLS: Bảng tổng hợp các hoạt động CÓ TÍCH HỢP NLS trong giáo án.
+   - I. MỤC TIÊU: (Yêu cầu cần đạt, Năng lực toán học, Năng lực chung, Năng lực số [Bắt buộc ghi rõ mã PPCT: ${params.nlsCode}], Phẩm chất).
+   - II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU: (Máy chiếu, bảng phụ, phần mềm ${params.digitalTools}, phiếu học tập).
+   - III. TIẾN TRÌNH DẠY HỌC: Phân chia đủ ${params.duration} tiết. Mỗi tiết đủ: Khởi động, Hình thành kiến thức / Luyện tập, Củng cố, Vận dụng. Các bước giao nhiệm vụ đặt trong môi trường \\begin{nhiemvu} ... \\end{nhiemvu}.
+   - IV. BẢNG PHÂN TÍCH PHÁT TRIỂN NLS: Bảng tổng hợp các hoạt động CÓ TÍCH HỢP NLS trong giáo án, đối chiếu rõ mã năng lực (${params.nlsCode}) và minh chứng hành vi của HS.
 3. Đảm bảo mã LaTeX biên dịch chuẩn với các gói: tcolorbox, tabularx, amsmath, geometry.`;
     }
 
@@ -258,14 +453,16 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
     async function generateLessonPlan() {
       const apiKey = document.getElementById('apiKey').value.trim();
       if (!apiKey) {
-        alert('Vui lòng nhập Gemini API Key của bạn để sử dụng trên trình duyệt này.');
+        alert('Vui lòng nhập Gemini API Key của bạn để sử dụng.');
         return;
       }
-      // Lưu API Key riêng biệt trên bộ nhớ máy cục bộ của trình duyệt hiện tại
       localStorage.setItem('local_gemini_api_key', apiKey);
 
       const durationVal = parseInt(document.getElementById('duration').value) || 1;
       const durationClamped = Math.max(1, Math.min(9, durationVal));
+
+      const stemNotice = document.getElementById('stemNotice');
+      const stemInfo = !stemNotice.classList.contains('hidden') ? document.getElementById('stemNoticeText').textContent : '';
 
       const params = {
         teacherName: document.getElementById('teacherName').value.trim(),
@@ -274,6 +471,8 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
         duration: durationClamped,
         nlsDensity: document.getElementById('nlsDensity').value,
         lessonName: document.getElementById('lessonName').value.trim(),
+        nlsCode: document.getElementById('nlsCode').value.trim(),
+        stemInfo: stemInfo,
         sourceUrl: document.getElementById('sourceUrl').value.trim(),
         digitalTools: document.getElementById('digitalTools').value.trim(),
         coreContent: document.getElementById('coreContent').value.trim()
@@ -289,7 +488,7 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
       btnGen.disabled = true;
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -305,7 +504,6 @@ YÊU CẦU ĐẦU RA LATEX BẮT BUỘC:
 
         let latexCode = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
         latexCode = latexCode.replace(/^```latex\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '');
-        
         latexCode = sanitizeLatexCode(latexCode);
 
         output.value = latexCode;
