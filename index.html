@@ -1,1190 +1,901 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaTeX Exam Generator - Khổ Chuẩn (Phần 1: Rèn luyện | Phần 2: Kiểm tra)</title>
-    <style>
-        :root {
-            --primary: #1e40af;
-            --primary-hover: #1d4ed8;
-            --secondary: #4338ca;
-            --success: #059669;
-            --success-hover: #047857;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --border: #cbd5e1;
-            --text: #0f172a;
-            --tn-badge: #0284c7;
-            --tl-badge: #d97706;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1360px;
-            margin: auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: var(--primary);
-            margin-bottom: 6px;
-            font-size: 24px;
-        }
-
-        .config-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .pdf-section {
-            background: #eff6ff;
-            border: 2px dashed #93c5fd;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .pdf-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 0.8fr;
-            gap: 16px;
-            margin-top: 10px;
-            margin-bottom: 12px;
-        }
-
-        .grade-tabs {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .grade-btn {
-            background: #ffffff;
-            border: 1px solid #94a3b8;
-            padding: 7px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-
-        .grade-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
-        }
-
-        .keyword-box {
-            margin-top: 6px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .keyword-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
-            padding: 8px;
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
-        .tag-btn {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 4px 10px;
-            border-radius: 14px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #334155;
-        }
-
-        .tag-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .tag-btn.selected {
-            background: #2563eb;
-            color: white;
-            border-color: #1d4ed8;
-        }
-
-        .config-item {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        input, select, textarea {
-            padding: 8px 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            background: #ffffff;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-analyze {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-analyze:hover {
-            background: #3730a3;
-        }
-
-        .btn-analyze:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        .title-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: 8px;
-        }
-
-        .grid-cols-2 {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            max-height: 850px;
-            overflow-y: auto;
-        }
-
-        .section-title {
-            font-size: 15px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 12px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 6px;
-            position: sticky;
-            top: 0;
-            background: var(--card-bg);
-            z-index: 10;
-        }
-
-        .part-header {
-            font-size: 12px;
-            font-weight: bold;
-            padding: 5px 8px;
-            border-radius: 4px;
-            margin: 10px 0 6px 0;
-            display: inline-block;
-        }
-
-        .part-header.tn {
-            background: #e0f2fe;
-            color: #0369a1;
-            border: 1px solid #bae6fd;
-        }
-
-        .part-header.tl {
-            background: #fef3c7;
-            color: #b45309;
-            border: 1px solid #fde68a;
-        }
-
-        .question-card {
-            background: #f8fafc;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .q-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .q-label {
-            font-size: 13px;
-            font-weight: bold;
-            color: #334155;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-type {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .badge-tn { background: var(--tn-badge); }
-        .badge-tl { background: var(--tl-badge); }
-        .badge-vdc { background: #7c3aed; color: #ffffff; font-weight: bold; }
-        .btn-add-q { background: #0284c7; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
-        .btn-add-q:hover { background: #0369a1; }
-        .btn-ai-vdc { background: #7c3aed; color: white; border: none; padding: 7px 13px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
-        .btn-ai-vdc:hover { background: #6d28d9; }
-        .btn-del-q { background: #f1f5f9; color: #dc2626; border: 1px solid #fca5a5; padding: 7px 11px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
-        .btn-del-q:hover { background: #fee2e2; }
-        .action-toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
-
-        .q-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .btn-generate {
-            display: block;
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-generate:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-generate:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        .result-box {
-            margin-top: 24px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        #latexOutput {
-            width: 100%;
-            height: 560px;
-            font-family: "Consolas", "Courier New", Courier, monospace;
-            font-size: 13px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 10px;
-            box-sizing: border-box;
-            background: #f1f5f9;
-        }
-
-        .btn-copy {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-copy:hover {
-            background: var(--success-hover);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soạn Kế Hoạch Bài Dạy Toán 10 (KNTT) - Chuẩn PPCT & Năng Lực Số</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
 
-<div class="container">
-    <header>
-        <h1>SOẠN TÀI LIỆU TOÁN: CHUẨN IN ẤN (PHẦN 1: RÈN LUYỆN | PHẦN 2: KIỂM TRA)</h1>
-        <p>Phần 1: Lý thuyết đóng khung & Bài rèn luyện • \newpage • Phần 2: Đề kiểm tra (7 TN + 3 TL có dòng kẻ lời giải)</p>
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- HEADER -->
+    <header class="mb-6 text-center">
+      <h1 class="text-3xl font-extrabold text-blue-900 tracking-tight flex items-center justify-center gap-2">
+        <i data-lucide="book-open-check" class="w-8 h-8 text-blue-700"></i>
+        Soạn Giáo Án Toán 10 (KNTT - NLS - STEM)
+      </h1>
+      <p class="text-slate-600 mt-1.5 text-sm">
+        Bộ sách <strong>Kết nối tri thức với cuộc sống</strong> — Nội dung chi tiết, không preamble, ký duyệt trống ngày tháng
+      </p>
     </header>
 
-    <div class="config-box">
-        <div class="config-item">
-            <label for="apiKey">Gemini API Key:</label>
-            <input type="password" id="apiKey" placeholder="Dán API Key (AIzaSy...)">
-        </div>
-        <div class="config-item">
-            <label for="modelName">Phiên bản Model:</label>
-            <input type="text" id="modelName" value="gemini-3.6-flash">
-        </div>
-    </div>
-
-    <div class="pdf-section">
-        <label style="font-size: 15px; color: #1e3a8a;"><strong>BƯỚC 1: TÀI LIỆU NGUỒN, KHỐI LỚP & CHUYÊN MỤC TRỌNG TÂM</strong></label>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- CỘT TRÁI: ĐIỀU KHIỂN & CHỌN BÀI (5 cols) -->
+      <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-4">
         
-        <div class="pdf-grid">
-            <div class="config-item">
-                <label for="pdfFile">Tải tệp PDF (hoặc để trống):</label>
-                <input type="file" id="pdfFile" accept="application/pdf">
-            </div>
-            <div class="config-item">
-                <label for="pdfUrl">Tên bài học cụ thể (ngắn gọn):</label>
-                <input type="text" id="pdfUrl" placeholder="Ví dụ: Ước chung lớn nhất, Khảo sát hàm số, Oxyz...">
-            </div>
-            <div class="config-item">
-                <label for="difficultyLevel">Mức độ các bài rèn luyện:</label>
-                <select id="difficultyLevel">
-                    <option value="standard">Chuẩn phân cấp (Nhận biết - Thông hiểu - Vận dụng - Bao trùm đề KT)</option>
-                    <option value="easy">Cơ bản (Củng cố kiến thức nền tảng & kỹ năng tính)</option>
-                    <option value="medium">Khá (Rèn luyện phương pháp & kỹ năng biến đổi)</option>
-                    <option value="hard">Nâng cao (Phát triển tư duy phân loại học sinh)</option>
-                </select>
-            </div>
+        <!-- Gemini API Key -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Google Gemini API Key</label>
+          <input type="password" id="apiKey" placeholder="AIzaSy..." 
+                 class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+          <span class="text-[11px] text-slate-400 mt-1 block">Khóa API được lưu cục bộ trên trình duyệt máy này.</span>
         </div>
 
-        <div class="grade-tabs">
-            <span style="font-size: 13px; font-weight: bold; color: #1e3a8a;">Chọn Khối Lớp:</span>
-            <button type="button" class="grade-btn active" onclick="switchGrade(6)">Toán 6</button>
-            <button type="button" class="grade-btn" onclick="switchGrade(8)">Toán 8</button>
-            <button type="button" class="grade-btn" onclick="switchGrade(10)">Toán 10</button>
-            <button type="button" class="grade-btn" onclick="switchGrade(11)">Toán 11</button>
-            <button type="button" class="grade-btn" onclick="switchGrade(12)">Toán 12</button>
+        <hr class="border-slate-100" />
+
+        <!-- Họ tên GV, Tổ trưởng & Tổ chuyên môn -->
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">1. GV thực hiện</label>
+            <input type="text" id="teacherName" value="Hoàng Xuân Định"
+                   class="w-full px-2.5 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">2. Tổ trưởng ký</label>
+            <input type="text" id="leaderName" value="Nông Thế Hưng"
+                   class="w-full px-2.5 py-2 border rounded-lg text-sm font-semibold text-emerald-800 bg-emerald-50/40 outline-none focus:ring-2 focus:ring-emerald-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">3. Tổ CM</label>
+            <input type="text" id="departmentName" value="TOÁN - SINH - CÔNG NGHỆ"
+                   class="w-full px-2 py-2 border border-blue-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-blue-900 uppercase bg-blue-50/40" />
+          </div>
         </div>
 
-        <div class="keyword-box">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <label for="keywordsInput"><strong id="currentGradeLabel">Chuyên mục chi tiết cho Toán 6</strong> (Bấm để chọn):</label>
-                <button type="button" style="font-size: 12px; background: none; border: none; color: var(--primary); cursor: pointer; text-decoration: underline;" onclick="clearKeywords()">Xóa chọn</button>
+        <!-- KHỐI CHỌN PPCT TOÁN 10 -->
+        <div class="p-4 bg-blue-50/70 rounded-xl border border-blue-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wide flex items-center gap-1.5">
+              <i data-lucide="list-filter" class="w-4 h-4 text-blue-700"></i>
+              Phân phối chương trình Toán 10 (KNTT)
+            </span>
+            <span class="text-[10px] font-semibold bg-blue-200/80 text-blue-800 px-2 py-0.5 rounded">Toán 10</span>
+          </div>
+
+          <!-- Bộ lọc phân loại bài học -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mạch chương trình</label>
+            <select id="programType" onchange="populateLessonOptions()" class="w-full px-2.5 py-2 border rounded-lg text-sm font-semibold text-slate-800 bg-white outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="all" selected>Tất cả bài học Toán 10</option>
+              <option value="hk1">Chính khóa: Học kỳ I (Bài 1 - Bài 14)</option>
+              <option value="hk2">Chính khóa: Học kỳ II (Bài 15 - Bài 27)</option>
+              <option value="chuyende">Chuyên đề học tập Toán 10 (CĐ 1, 2, 3)</option>
+              <option value="trainghiem">Hoạt động thực hành trải nghiệm</option>
+              <option value="stem">Chủ đề / Dự án STEM</option>
+            </select>
+          </div>
+
+          <!-- Danh sách bài học Toán 10 -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Chọn bài học cần soạn</label>
+            <select id="ppctLessonSelect" onchange="onLessonSelectChange()" class="w-full px-2.5 py-2 border border-blue-300 rounded-lg text-sm font-medium text-blue-950 bg-white outline-none focus:ring-2 focus:ring-blue-500">
+            </select>
+          </div>
+
+          <!-- Tên bài hiển thị -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tên bài học</label>
+            <input type="text" id="lessonName" value=""
+                   class="w-full px-3 py-2 border rounded-lg text-sm font-semibold text-slate-800 bg-white outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+
+          <!-- Mã NLS & Số tiết theo PPCT -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mã NLS/GD TTNT</label>
+              <input type="text" id="nlsCode" value=""
+                     class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm font-mono font-bold text-blue-700 bg-white outline-none" />
             </div>
-            <div class="keyword-tags" id="tagContainer"></div>
-            <input type="text" id="keywordsInput" placeholder="Các chuyên mục/từ khóa đã chọn..." style="margin-top: 4px;">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Số tiết theo PPCT</label>
+              <input type="number" id="duration" min="1" max="9" value="4"
+                     class="w-full px-3 py-2 border rounded-lg text-sm font-bold text-center text-slate-800 bg-white outline-none" />
+            </div>
+          </div>
+
+          <!-- Banner thông báo STEM nếu có -->
+          <div id="stemNotice" class="hidden p-2.5 bg-emerald-50 rounded-lg border border-emerald-300 text-emerald-800 text-xs flex items-start gap-2">
+            <i data-lucide="wrench" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <div>
+              <span class="font-bold block">Tích hợp Dự án STEM / Thực tiễn:</span>
+              <span id="stemNoticeText" class="text-[11px] leading-relaxed"></span>
+            </div>
+          </div>
+
         </div>
 
-        <button class="btn-analyze" id="btnAnalyze" onclick="analyzePdfAndSuggest()">
-            🔍 Phân tích & Đề xuất (Lý Thuyết + 20 Bài Rèn Luyện + 10 Câu Kiểm Tra)
+        <!-- Mật độ NLS & Công cụ số -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mật độ NLS</label>
+            <select id="nlsDensity" class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none">
+              <option value="Tinh giản (1 hoạt động then chốt, không lạm dụng)" selected>Tinh giản (1 hoạt động cốt lõi)</option>
+              <option value="Vừa phải (1-2 hoạt động then chốt)">Vừa phải (1-2 hoạt động)</option>
+              <option value="Chuyên sâu (Ứng dụng liên tục/STEM)">Chuyên sâu (Dự án STEM)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Công cụ số sử dụng</label>
+            <input type="text" id="digitalTools" value="GeoGebra, Casio fx-880BTG, Azota, Quizizz, ChatGPT"
+                   class="w-full px-3 py-2 border rounded-lg text-sm outline-none" />
+          </div>
+        </div>
+
+        <!-- Link tham khảo -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Link SGK / Nguồn ngữ liệu tham khảo</label>
+          <input type="url" id="sourceUrl" value="https://toanmath.com/2022/01/sach-giao-khoa-toan-10-tap-1-ket-noi-tri-thuc-voi-cuoc-song.html"
+                 class="w-full px-3 py-2 border rounded-lg text-xs font-mono text-blue-700 outline-none" />
+        </div>
+
+        <!-- Khung mục tiêu đầu sách SGK -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-slate-700">Yêu cầu cần đạt (Khung đóng ở đầu bài SGK KNTT)</label>
+            <button type="button" onclick="fetchCoreContentFromAI()" 
+                    class="text-[11px] text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 bg-blue-100 hover:bg-blue-200 px-2 py-0.5 rounded transition-all">
+              <i data-lucide="sparkle" class="w-3 h-3"></i>
+              Lấy nguyên văn từ SGK (AI)
+            </button>
+          </div>
+          <textarea id="coreContent" rows="3"
+                    class="w-full px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-blue-500 outline-none resize-none leading-relaxed"
+                    placeholder="Mục tiêu khung đầu bài học sẽ hiển thị tại đây..."></textarea>
+        </div>
+
+        <!-- Nút Tạo Giáo Án -->
+        <button id="btnGenerate" onclick="generateLessonPlan()"
+                class="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          Khởi Tạo Giáo Án Chi Tiết (Không Preamble)
         </button>
-        <span id="analyzeStatus" style="margin-left: 12px; font-size: 13px; font-weight: 500; color: #475569;"></span>
-    </div>
 
-    <div class="title-box">
-        <div class="config-item">
-            <label for="lessonName">Tiêu đề bài học (Ngắn gọn, dùng chung cho tài liệu):</label>
-            <input type="text" id="lessonName" value="ƯỚC CHUNG LỚN NHẤT">
-        </div>
-        <div class="config-item">
-            <label for="theorySummary">Tóm tắt kiến thức cốt lõi (Hiển thị ở đầu Trang 1):</label>
-            <input type="text" id="theorySummary" placeholder="Định nghĩa, công thức then chốt...">
-        </div>
-    </div>
+      </div>
 
-    <div class="grid-cols-2">
-        <div class="section-card">
-            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>PHẦN 1: BÀI TẬP TỰ LUYỆN RÈN LUYỆN</span>
-                <span id="practiceCountBadge" style="font-size:12px; background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:12px; font-weight:600;">20 bài</span>
-            </div>
-            <div class="action-toolbar">
-                <button type="button" class="btn-add-q" onclick="addPracticeQuestion(false)">+ Thêm bài thủ công</button>
-                <button type="button" class="btn-ai-vdc" id="btnAiVdc" onclick="addPracticeVdcWithAI()">⚡ AI tạo câu VD - VDC</button>
-                <button type="button" class="btn-del-q" onclick="removeLastPracticeQuestion()">✕ Bớt bài cuối</button>
-            </div>
-            <div id="practiceContainer"></div>
-        </div>
-
-        <div class="section-card">
-            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>PHẦN 2: BÀI KIỂM TRA ĐÁNH GIÁ (7 TN + 3 TL)</span>
-                <label style="font-size:12px; font-weight:normal; color:#1e40af; cursor:pointer; display:flex; align-items:center; gap:4px;">
-                    <input type="checkbox" id="shuffleCheckbox" checked style="cursor:pointer;">
-                    <span>Xáo ngẫu nhiên phương án (\True)</span>
-                </label>
-            </div>
-            <div id="testContainer"></div>
-        </div>
-    </div>
-
-    <button class="btn-generate" id="generateBtn" onclick="generateLatex()">Tạo Mã LaTeX Chuẩn</button>
-
-    <div class="result-box">
-        <div class="result-header">
-            <label><strong>Mã LaTeX hoàn chỉnh (Đã chuẩn hóa 1 dấu \newpage giữa 2 phần):</strong></label>
-            <button class="btn-copy" onclick="copyLatex()">Sao chép mã LaTeX</button>
-        </div>
-        <textarea id="latexOutput" placeholder="Mã LaTeX sẽ hiển thị tại đây..."></textarea>
-    </div>
-</div>
-
-<script>
-    const gradeKeywordsMap = {
-        6: [
-            "Tập hợp & Phần tử", "Số tự nhiên & Lũy thừa với số mũ tự nhiên", "Thứ tự thực hiện phép tính",
-            "Dấu hiệu chia hết (2, 3, 5, 9)", "Số nguyên tố & Hợp số", "Phân tích số ra thừa số nguyên tố",
-            "Ước chung & Ước chung lớn nhất (ƯCLN)", "Bội chung & Bội chung nhỏ nhất (BCNN)",
-            "Bài toán thực tế chia tổ/chia quà", "Tập hợp số nguyên & Biểu diễn trên trục số",
-            "Cộng, trừ số nguyên & Quy tắc dấu ngoặc", "Quy tắc chuyển vế tìm x",
-            "Phân số cơ bản & Rút gọn phân số tối giản", "Cộng, trừ, nhân, chia phân số",
-            "Tìm phân số của một số & Tìm một số biết giá trị phân số",
-            "Hình học trực quan: Tam giác đều, Lục giác đều, Hình thoi, Hình thang cân",
-            "Điểm, đường thẳng, tia & Đoạn thẳng - Trung điểm đoạn thẳng",
-            "Góc & Số đo góc", "Dãy số quy luật & Phân số nâng cao", "Tìm n để phân số là số nguyên"
-        ],
-        8: [
-            "Đơn thức & Đa thức nhiều biến", "Các phép tính cộng, trừ, nhân, chia đa thức",
-            "7 Hằng đẳng thức đáng nhớ", "Phân tích đa thức thành nhân tử cơ bản",
-            "Phân tích đa thức bằng phối hợp nhiều phương pháp", "Chia đa thức một biến đã sắp xếp",
-            "Phân thức đại số: Điều kiện xác định & Rút gọn", "Cộng trừ nhân chia phân thức đại số",
-            "Biểu thức phân thức tổng hợp & Tìm x để giá trị nguyên",
-            "Phương trình bậc nhất một ẩn ax + b = 0", "Phương trình tích A(x).B(x) = 0",
-            "Phương trình chứa ẩn ở mẫu thức", "Giải bài toán bằng cách lập phương trình: Chuyển động",
-            "Giải bài toán bằng cách lập phương trình: Năng suất & Làm chung làm riêng",
-            "Bất đẳng thức & Bất phương trình bậc nhất một ẩn", "Tìm GTLN - GTNN bằng biến đổi hằng đẳng thức",
-            "Hình tứ giác: Hình thang, Hình bình hành, Hình chữ nhật, Hình thoi, Hình vuông",
-            "Định lý Thalès trong tam giác (Thuận, Đảo, Hệ quả)", "Tính chất đường phân giác trong tam giác",
-            "Tam giác đồng dạng & Các trường hợp đồng dạng (c-c-c, c-g-c, g-g)"
-        ],
-        10: [
-            "Mệnh đề toán học & Mệnh đề phủ định, kéo theo", "Tập hợp & Các phép toán hợp, giao, hiệu tập hợp",
-            "Bất phương trình bậc nhất hai ẩn", "Hệ bất phương trình bậc nhất hai ẩn & Miền nghiệm",
-            "Hệ thức lượng trong tam giác (Định lý Sin, Cosin, Công thức diện tích)",
-            "Vectơ: Định nghĩa, Hai vectơ cùng phương, Độ dài", "Tổng và hiệu hai vectơ - Quy tắc 3 điểm, Hình bình hành",
-            "Tích của vectơ với một số & Điều kiện thẳng hàng", "Tích vô hướng của hai vectơ & Góc giữa hai vectơ",
-            "Hàm số bậc hai: Bảng biến thiên & Khảo sát vẽ Parabol", "Dấu của tam thức bậc hai",
-            "Bất phương trình bậc hai một ẩn", "Phương trình quy về bậc hai chứa căn thức",
-            "Phương trình tham số & Tổng quát của đường thẳng Oxy", "Khoảng cách và góc trong Oxy",
-            "Phương trình đường tròn Oxy & Tiếp tuyến đường tròn", "Ba đường Conic (Elip, Hypebol, Parabol)",
-            "Quy tắc cộng, Quy tắc nhân, Sơ đồ hình cây", "Hoán vị, Chỉnh hợp, Tổ hợp",
-            "Nhị thức Newton (khai triển bậc 4, bậc 5)", "Xác suất của biến cố & Xác suất cổ điển"
-        ],
-        11: [
-            "Giá trị lượng giác: Xác định dấu, tính GTLG còn lại, rút gọn cung liên kết",
-"Công thức lượng giác: Cộng, nhân đôi, hạ bậc, biến đổi tích-tổng, nhận dạng tam giác",
-"Hàm số lượng giác: Tập xác định, tính chẵn lẻ, chu kỳ, GTLN-GTNN",
-"Phương trình lượng giác: Cơ bản, bậc nhất đối với sin và cos, bậc hai và đẳng cấp",
-"Dãy số: Số hạng tổng quát, hệ thức truy hồi, xét tính tăng giảm, tính bị chặn",
-"Cấp số cộng: Xác định các yếu tố u1 và d, tìm số hạng tổng quát, tính tổng n số hạng đầu",
-"Cấp số nhân: Tìm công bội q, số hạng tổng quát, tính tổng n số hạng, tổng CSN lùi vô hạn",
-"Giới hạn dãy số: Phân thức hữu tỉ, chứa lũy thừa a^n, vô định căn thức khử liên hợp",
-"Giới hạn hàm số: Dạng vô định 0/0, vô cực/vô cực, vô cực trừ vô cực, giới hạn một bên",
-"Hàm số liên tục: Xét liên tục tại một điểm, liên tục trên khoảng/đoạn, định lý Bolzano",
-"Định nghĩa đạo hàm: Tính đạo hàm bằng định nghĩa, hệ số góc tiếp tuyến tại điểm",
-"Quy tắc đạo hàm: Đạo hàm đa thức/hữu tỉ, hàm hợp, đạo hàm cấp cao",
-"Đạo hàm lượng giác: Công thức cơ bản, đạo hàm hàm hợp lượng giác, đẳng thức liên hệ",
-"Phương trình tiếp tuyến: Tại tiếp điểm, biết hệ số góc k, tiếp tuyến đi qua một điểm",
-"Đại cương không gian: Tìm giao tuyến hai mp, tìm giao điểm đường và mp, thiết diện",
-"Quan hệ song song: Hai đường thẳng song song, đường song song mặt, hai mặt phẳng song song",
-"Đường vuông góc mặt: Chứng minh d vuông góc (P), hai đường vuông góc, góc giữa đường và mp",
-"Hai mặt phẳng vuông góc: Chứng minh hai mp vuông góc, góc giữa hai mặt phẳng, diện tích hình chiếu",
-"Khoảng cách không gian: Điểm đến mặt phẳng, hai đường thẳng chéo nhau",
-"Biến cố: Không gian mẫu, biến cố hợp, biến cố giao, biến cố xung khắc và độc lập",
-"Xác suất: Công thức cộng xác suất, công thức biến cố đối, công thức nhân xác suất độc lập"
-        ],
-        12: [
-            "Sự đồng biến, nghịch biến của hàm số (Đơn điệu)", "Cực trị của hàm số bậc ba, trùng phương, phân thức",
-            "Giá trị lớn nhất và nhỏ nhất của hàm số trên đoạn/khoảng", "Đường tiệm cận đứng, tiệm cận ngang, tiệm cận xiên",
-            "Khảo sát sự biến thiên và vẽ đồ thị hàm số", "Bài toán thực tế tối ưu hóa (Min - Max)",
-            "Hàm số mũ, lũy thừa & Hàm số Logarit", "Phương trình và bất phương trình Mũ - Logarit",
-            "Nguyên hàm các hàm số cơ bản & Tính chất", "Phương pháp đổi biến số tìm nguyên hàm/tích phân",
-            "Phương pháp nguyên hàm từng phần", "Ứng dụng hình học của tích phân (Diện tích hình phẳng)",
-            "Ứng dụng hình học của tích phân (Thể tích khối tròn xoay)",
-            "Tọa độ vectơ & Tọa độ điểm trong không gian Oxyz",
-            "Phương trình mặt cầu Oxyz & Vị trí tương đối",
-            "Phương trình mặt phẳng Oxyz (Vectơ pháp tuyến, tích có hướng)",
-            "Phương trình đường thẳng Oxyz (Vectơ chỉ phương, hình chiếu vuông góc)",
-            "Khoảng cách & Góc trong không gian tọa độ Oxyz",
-            "Xác suất có điều kiện & Công thức xác suất toàn phần, công thức Bayes",
-            "Phân bố nhị thức & Biến ngẫu nhiên rời rạc"
-        ]
-    };
-
-    let currentSelectedGrade = 6;
-    let selectedKeywords = [];
-    let practiceQuestionsCount = 20;
-
-    window.onload = function() {
-        buildEmptyRows();
-        switchGrade(6);
-        const savedKey = localStorage.getItem("gemini_api_key");
-        if (savedKey) document.getElementById("apiKey").value = savedKey;
-    };
-
-    function switchGrade(grade) {
-        currentSelectedGrade = grade;
-        selectedKeywords = [];
-        document.getElementById("keywordsInput").value = "";
-        document.getElementById("currentGradeLabel").innerText = `Chuyên mục chi tiết cho Toán ${grade}`;
+      <!-- CỘT PHẢI: MÃ NGUỒN LATEX (7 cols) -->
+      <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
         
-        document.querySelectorAll(".grade-btn").forEach(btn => {
-            btn.classList.toggle("active", btn.innerText.includes(grade));
-        });
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+            <i data-lucide="terminal" class="w-4 h-4 text-slate-500"></i>
+            Mã nguồn LaTeX Hoàn Chỉnh (Chỉ phần nội dung)
+          </span>
+          <button id="btnCopy" onclick="copyLatex()" disabled
+                  class="px-3.5 py-1.5 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-40">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            Sao chép mã
+          </button>
+        </div>
 
-        const container = document.getElementById("tagContainer");
-        container.innerHTML = "";
-        const keywords = gradeKeywordsMap[grade] || [];
-        keywords.forEach(kw => {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "tag-btn";
-            btn.innerText = `+ ${kw}`;
-            btn.onclick = () => toggleTag(kw, btn);
-            container.appendChild(btn);
-        });
+        <div class="relative flex-1 min-h-[580px]">
+          <textarea id="outputLatex" readonly
+                    class="w-full h-full p-4 font-mono text-xs text-slate-100 bg-slate-900 rounded-xl outline-none resize-none border border-slate-800 leading-relaxed"
+                    placeholder="Mã nguồn LaTeX chi tiết sẽ xuất hiện tại đây..."></textarea>
+          
+          <!-- Loading overlay -->
+          <div id="loadingOverlay" class="absolute inset-0 bg-slate-900/85 backdrop-blur-sm rounded-xl hidden flex-col items-center justify-center text-white gap-3.5">
+            <div class="w-9 h-9 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span id="loadingMessage" class="text-sm font-medium">Đang sinh kế hoạch bài dạy chi tiết từng hoạt động...</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const TOAN10_DATABASE = [
+      {
+        cat: "hk1",
+        name: "Bài 1. Mệnh đề",
+        periods: 4,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Thiết lập và phát biểu được các mệnh đề phủ định, mệnh đề kéo theo, mệnh đề tương đương, mệnh đề đảo. • Thiết lập và phát biểu được các mệnh đề có chứa kí hiệu với mọi (∀) và tồn tại (∃). • Xác định được tính đúng sai của một mệnh đề trong những trường hợp đơn giản. • Phân biệt được điều kiện cần, điều kiện đủ, giả thiết và kết luận."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 2. Tập hợp và các phép toán trên tập hợp",
+        periods: 4,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết các khái niệm cơ bản về tập hợp (phần tử, tập con, hai tập hợp bằng nhau). • Biểu diễn các tập con của tập số thực (khoảng, đoạn, nửa khoảng). • Thực hiện các phép toán giao, hợp, hiệu của hai tập hợp và phần bù của một tập con."
+      },
+      {
+        cat: "hk1",
+        name: "Ôn tập chương I (Mệnh đề và tập hợp)",
+        periods: 1,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Hệ thống hóa toàn bộ kiến thức logic mệnh đề, các phép toán tập hợp và biểu diễn tập hợp trên trục số."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 3. Bất phương trình bậc nhất hai ẩn",
+        periods: 3,
+        nls: "5.2.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết bất phương trình bậc nhất hai ẩn. • Biểu diễn miền nghiệm của bất phương trình bậc nhất hai ẩn trên mặt phẳng toạ độ."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 4. Hệ bất phương trình bậc nhất hai ẩn",
+        periods: 3,
+        nls: "5.2.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết hệ bất phương trình bậc nhất hai ẩn. • Biểu diễn miền nghiệm của hệ bất phương trình bậc nhất hai ẩn trên mặt phẳng toạ độ. • Vận dụng kiến thức về hệ bất phương trình bậc nhất hai ẩn vào giải quyết một số bài toán thực tiễn (tìm giá trị lớn nhất, giá trị nhỏ nhất của biểu thức F = ax + by trên miền đa giác)."
+      },
+      {
+        cat: "hk1",
+        name: "Ôn tập chương II (BPT & Hệ BPT bậc nhất hai ẩn)",
+        periods: 1,
+        nls: "1.2.NC1a",
+        stem: "",
+        yccd: "Củng cố kĩ năng biểu diễn miền nghiệm của hệ BPT bậc nhất hai ẩn và mô hình hóa bài toán quy hoạch tuyến tính thực tế."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 5. Giá trị lượng giác của một góc từ 0° đến 180°",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết giá trị lượng giác sin, côsin, tang, côtang của một góc từ 0° đến 180°. • Nắm vững các hệ thức lượng giác cơ bản và quan hệ giữa các giá trị lượng giác của hai góc bù nhau."
+      },
+      {
+        cat: "stem",
+        name: "Bài 6. Hệ thức lượng trong tam giác",
+        periods: 4,
+        nls: "3.1.NC1a",
+        stem: "Chủ đề/Dự án 1: Chế tạo Giác kế (Clinometer) và Ứng dụng đo đạc thực tế (Đo góc ngắm, tính chiều cao cột cờ, tòa nhà bằng định lí Sin, Côsin)",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết và vận dụng định lí côsin, định lí sin trong tam giác. • Nắm vững và tính toán diện tích tam giác theo các công thức khác nhau. • Giải tam giác và vận dụng vào giải quyết các bài toán đo đạc thực tế (kết hợp chế tạo giác kế đo đạc ngoài sân trường)."
+      },
+      {
+        cat: "hk1",
+        name: "Ôn tập chương III (Hệ thức lượng trong tam giác)",
+        periods: 1,
+        nls: "5.1.NC1a",
+        stem: "",
+        yccd: "Tổng kết các công thức giải tam giác (định lí Sin, Côsin, công thức diện tích Heron, bán kính R, r) và phương pháp giải tam giác tổng quát."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 7. Các khái niệm mở đầu về vectơ",
+        periods: 2,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết khái niệm vectơ, vectơ-không, độ dài của vectơ, hai vectơ cùng phương, cùng hướng, hai vectơ bằng nhau."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 8. Tổng và hiệu của hai vectơ",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Thực hiện các phép cộng, trừ vectơ; áp dụng quy tắc ba điểm, quy tắc hình bình hành. • Nắm vững các tính chất của phép cộng vectơ và vectơ đối."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 9. Tích của một vectơ với một số",
+        periods: 2,
+        nls: "1.2.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Thực hiện phép nhân vectơ với một số thực; áp dụng tính chất trung điểm, trọng tâm tam giác. • Điều kiện để hai vectơ cùng phương, ba điểm thẳng hàng."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 10. Vectơ trong mặt phẳng tọa độ",
+        periods: 3,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết tọa độ của điểm và vectơ trong hệ trục tọa độ Oxy. • Xác định tọa độ của các phép toán cộng, trừ vectơ, nhân với một số, tọa độ trung điểm và trọng tâm."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 11. Tích vô hướng của hai vectơ",
+        periods: 3,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết định nghĩa và ý nghĩa hình học của tích vô hướng. • Tính góc giữa hai vectơ, chứng minh hai vectơ vuông góc. • Sử dụng biểu thức tọa độ của tích vô hướng để tính độ dài, khoảng cách và góc."
+      },
+      {
+        cat: "hk1",
+        name: "Ôn tập chương IV (Vectơ)",
+        periods: 1,
+        nls: "1.2.NC1a",
+        stem: "",
+        yccd: "Hệ thống hóa toàn bộ các phép toán vectơ hình học thuần túy và phương pháp tọa độ của vectơ trong mặt phẳng Oxy."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 12. Số gần đúng và sai số",
+        periods: 2,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Hiểu khái niệm số gần đúng, sai số tuyệt đối, sai số tương đối và độ chính xác của số gần đúng. • Quy tròn số và xác định các chữ số chắc của số gần đúng."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 13. Các số đặc trưng đo xu thế trung tâm",
+        periods: 2,
+        nls: "1.3.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Tính số trung bình cộng, trung vị, tứ phân vị và mốt của mẫu số liệu không ghép nhóm. • Giải thích ý nghĩa của từng số đặc trưng đo xu thế trung tâm trong thực tế."
+      },
+      {
+        cat: "hk1",
+        name: "Bài 14. Các số đặc trưng đo mức độ phân tán",
+        periods: 2,
+        nls: "1.3.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Tính khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu không ghép nhóm. • Sử dụng máy tính cầm tay (Casio fx-880BTG / 580VNX) tính nhanh các số đặc trưng đo độ phân tán."
+      },
+      {
+        cat: "hk1",
+        name: "Ôn tập chương V (Số đặc trưng thống kê)",
+        periods: 1,
+        nls: "6.3.NC1a / 10.C4.1",
+        stem: "",
+        yccd: "Tổng kết phương pháp phân tích mẫu số liệu thống kê; so sánh độ ổn định và mức độ phân tán của hai tập dữ liệu thực tế."
+      },
+      {
+        cat: "trainghiem",
+        name: "HĐ Trải nghiệm: Tìm hiểu một số kiến thức về tài chính",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Làm quen với các khái niệm tài chính cá nhân căn bản: thu nhập, chi tiêu, tiết kiệm, lãi suất gửi tiền và lập kế hoạch chi tiêu hợp lý."
+      },
+      {
+        cat: "trainghiem",
+        name: "HĐ Trải nghiệm: Mạng xã hội - Lợi và hại",
+        periods: 2,
+        nls: "6.2.NC1c / 10B2.1",
+        stem: "",
+        yccd: "Thu thập số liệu về thời lượng sử dụng mạng xã hội của học sinh; xử lý thống kê mẫu số liệu và đánh giá tác động tích cực/tiêu cực của mạng xã hội."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 15. Hàm số",
+        periods: 4,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết định nghĩa hàm số, tập xác định, tập giá trị của hàm số. • Đọc và vẽ đồ thị hàm số; nhận biết tính đồng biến, nghịch biến của hàm số trên một khoảng."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 16. Hàm số bậc hai",
+        periods: 3,
+        nls: "1.2.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết hàm số bậc hai y = ax² + bx + c (a ≠ 0). • Xác định tọa độ đỉnh, trục đối xứng, bảng biến thiên và vẽ thành thạo parabol đồ thị hàm số bậc hai; ứng dụng tìm GTLN, GTNN thực tế."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 17. Dấu của tam thức bậc hai",
+        periods: 3,
+        nls: "5.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nắm vững định lí về dấu của tam thức bậc hai ax² + bx + c. • Giải bất phương trình bậc hai một ẩn và ứng dụng vào giải quyết các bài toán chứa tham số đơn giản."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 18. Phương trình quy về phương trình bậc hai",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Giải phương trình chứa căn dạng √(ax² + bx + c) = √(dx² + ex + f) và √(ax² + bx + c) = dx + e bằng phép bình phương và thử lại nghiệm."
+      },
+      {
+        cat: "hk2",
+        name: "Ôn tập chương VI (Hàm số và đồ thị)",
+        periods: 1,
+        nls: "2.1.NC1a",
+        stem: "",
+        yccd: "Hệ thống hóa kiến thức về khảo sát parabol, dấu tam thức bậc hai và phương pháp giải phương trình vô tỉ quy về bậc hai."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 19. Phương trình đường thẳng",
+        periods: 2,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết vectơ chỉ phương, vectơ pháp tuyến. • Lập phương trình tham số và phương trình tổng quát của đường thẳng khi biết các yếu tố xác định."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 20. Vị trí tương đối giữa hai đường thẳng. Góc và khoảng cách",
+        periods: 3,
+        nls: "1.2.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Xét vị trí tương đối giữa hai đường thẳng (cắt nhau, song song, trùng nhau). • Tính góc giữa hai đường thẳng và tính khoảng cách từ một điểm đến một đường thẳng."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 21. Đường tròn trong mặt phẳng toạ độ",
+        periods: 2,
+        nls: "6.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Lập phương trình đường tròn khi biết tâm và bán kính; nhận dạng phương trình đường tròn. • Viết phương trình tiếp tuyến của đường tròn tại một điểm hoặc đi qua một điểm."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 22. Ba đường conic",
+        periods: 4,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết phương trình chính tắc của ba đường conic: Elip (x²/a² + y²/b² = 1), Hypebol (x²/a² - y²/b² = 1), Parabol (y² = 2px). • Xác định tiêu điểm, tiêu cự, trục đối xứng và các đỉnh của đường conic."
+      },
+      {
+        cat: "hk2",
+        name: "Ôn tập chương VII (Phương pháp tọa độ trong mặt phẳng)",
+        periods: 1,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Tổng kết phương pháp giải bài toán hình học phẳng Oxy: viết phương trình đường thẳng, đường tròn, đường conic và công thức khoảng cách, góc."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 23. Quy tắc đếm",
+        periods: 4,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Hiểu và vận dụng thành thạo quy tắc cộng, quy tắc nhân vào các bài toán đếm đối tượng. • Sử dụng sơ đồ hình cây để phân tích và giải các bài toán đếm phân loại phức tạp."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 24. Hoán vị - Chỉnh hợp - Tổ hợp",
+        periods: 4,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết và phân biệt khái niệm hoán vị (P_n), chỉnh hợp (A_n^k) và tổ hợp (C_n^k). • Áp dụng công thức tính số hoán vị, chỉnh hợp, tổ hợp vào giải toán đếm thực tiễn."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 25. Nhị thức Newton",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Khai triển nhị thức Newton (a + b)ⁿ với n = 4, 5 bằng công thức đại số hoặc tam giác Pascal. • Xác định hệ số của một số hạng trong khai triển."
+      },
+      {
+        cat: "hk2",
+        name: "Ôn tập chương VIII (Đại số tổ hợp)",
+        periods: 1,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Củng cố kĩ năng vận dụng linh hoạt quy tắc cộng, nhân, tổ hợp, chỉnh hợp và khai triển nhị thức Newton."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 26. Biến cố và định nghĩa cổ điển của xác suất",
+        periods: 2,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết không gian mẫu Ω, biến cố và biến cố đối. • Tính xác suất của biến cố theo định nghĩa cổ điển P(A) = n(A) / n(Ω)."
+      },
+      {
+        cat: "hk2",
+        name: "Bài 27. Thực hành tính xác suất theo định nghĩa cổ điển",
+        periods: 2,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Vận dụng phương pháp tổ hợp để tính số phần tử không gian mẫu và biến cố. • Tính xác suất của các trò chơi ngẫu nhiên và biến cố đối P(A) = 1 - P(A_đối)."
+      },
+      {
+        cat: "hk2",
+        name: "Ôn tập chương IX (Xác suất cổ điển)",
+        periods: 1,
+        nls: "1.1.NC1a",
+        stem: "",
+        yccd: "Tổng kết quy trình tính xác suất cổ điển từ mô tả không gian mẫu đến tính số khả năng thuận lợi."
+      },
+      {
+        cat: "trainghiem",
+        name: "HĐ Trải nghiệm: Một số nội dung cho hoạt động trải nghiệm hình học",
+        periods: 2,
+        nls: "1.1.NC1b",
+        stem: "",
+        yccd: "Thực hành ứng dụng phần mềm GeoGebra hoặc dụng cụ đo đạc thực tế để đo khoảng cách không thể tới trực tiếp ngoài thực địa trường học."
+      },
+      {
+        cat: "trainghiem",
+        name: "HĐ Trải nghiệm: Ước tính số cá thể trong một quần thể",
+        periods: 1,
+        nls: "6.1.NC1a",
+        stem: "",
+        yccd: "Vận dụng phương pháp bắt - đánh dấu - thả lại (mô hình xác suất bắt mẫu) để ước tính số lượng cá thể sinh vật hoặc sản phẩm thực tế."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 1: Bài 1. Hệ phương trình bậc nhất ba ẩn",
+        periods: 5,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết hệ phương trình bậc nhất ba ẩn. • Giải hệ phương trình bậc nhất ba ẩn bằng phương pháp khử Gauss và bằng máy tính cầm tay."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 1: Bài 2. Ứng dụng của hệ phương trình bậc nhất ba ẩn",
+        periods: 5,
+        nls: "6.2.NC1b / 10.C3.2",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Mô hình hóa và giải quyết các bài toán cân bằng phương trình hóa học, bài toán phân bổ nguồn lực, bài toán dòng điện Kirchhoff bằng hệ phương trình bậc nhất ba ẩn."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 2: Bài 3. Phương pháp quy nạp toán học",
+        periods: 5,
+        nls: "1.3.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nắm vững các bước chứng minh bằng phương pháp quy nạp toán học (bước cơ sở và bước quy nạp). • Vận dụng chứng minh các đẳng thức, bất đẳng thức và tính chất chia hết chứa số tự nhiên n."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 2: Bài 4. Nhị thức Newton (Mở rộng)",
+        periods: 4,
+        nls: "1.3.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nắm vững công thức khai triển tổng quát nhị thức Newton với số mũ n. • Tìm số hạng tổng quát và hệ số lớn nhất trong khai triển nhị thức."
+      },
+      {
+        cat: "stem",
+        name: "Chuyên đề 3: Bài 5. Elip",
+        periods: 3,
+        nls: "3.1.NC1a",
+        stem: "Chủ đề/Dự án 3: Mô hình Bàn Bi-a Elip (Phòng thì thầm) - Kiểm chứng tính chất phản xạ quang học từ tiêu điểm F1 đập vào thành dội về tiêu điểm F2",
+        yccd: "Học xong bài này, bạn có thể: • Nắm định nghĩa Elip theo tiêu điểm và tâm sai e; bán kính qua tiêu. • Lập phương trình Elip và chế tạo mô hình bàn bi-a elip phản xạ bi qua 2 tiêu điểm."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 3: Bài 6. Hypebol",
+        periods: 3,
+        nls: "3.1.NC1a",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết định nghĩa, tiêu điểm, tâm sai và phương trình đường tiệm cận của hypebol. • Thiết lập phương trình chính tắc và tìm các yếu tố hình học của hypebol."
+      },
+      {
+        cat: "stem",
+        name: "Chuyên đề 3: Bài 7. Parabol",
+        periods: 2,
+        nls: "3.1.NC1a",
+        stem: "Chủ đề/Dự án 2: Bếp năng lượng mặt trời Parabol (Đèn pin gom sáng) - Thiết kế chảo Parabol hội tụ ánh sáng tại tiêu điểm F(p/2, 0) đun nóng vật",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết định nghĩa Parabol theo tiêu điểm và đường chuẩn. • Nắm vững tính chất quang học của Parabol (tia sáng song song với trục đối xứng dội lại hội tụ tại tiêu điểm); tự làm bếp chảo Parabol."
+      },
+      {
+        cat: "chuyende",
+        name: "Chuyên đề 3: Bài 8. Sự thống nhất giữa ba đường conic",
+        periods: 2,
+        nls: "5.2.NC1b",
+        stem: "",
+        yccd: "Học xong bài này, bạn có thể: • Nhận biết định nghĩa chung của ba đường conic thông qua tiêu điểm, đường chuẩn và tâm sai e (e < 1: elip; e = 1: parabol; e > 1: hypebol)."
+      }
+    ];
+
+    lucide.createIcons();
+
+    document.getElementById('apiKey').value = localStorage.getItem('local_gemini_api_key') || '';
+
+    function populateLessonOptions() {
+      const type = document.getElementById('programType').value;
+      const select = document.getElementById('ppctLessonSelect');
+      select.innerHTML = '';
+
+      const filtered = TOAN10_DATABASE.filter(item => {
+        if (type === 'all') return true;
+        if (type === 'stem') return item.stem !== "";
+        return item.cat === type;
+      });
+
+      filtered.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = TOAN10_DATABASE.indexOf(item);
+        opt.textContent = `${item.name} (${item.periods}t - [${item.nls}])`;
+        select.appendChild(opt);
+      });
+
+      const customOpt = document.createElement('option');
+      customOpt.value = 'custom';
+      customOpt.textContent = '-- Nhập bài học khác ngoài danh mục --';
+      select.appendChild(customOpt);
+
+      onLessonSelectChange();
     }
 
-    function toggleTag(keyword, btnEl) {
-        const index = selectedKeywords.indexOf(keyword);
-        if (index > -1) {
-            selectedKeywords.splice(index, 1);
-            btnEl.classList.remove("selected");
-            btnEl.innerText = `+ ${keyword}`;
+    function onLessonSelectChange() {
+      const selectVal = document.getElementById('ppctLessonSelect').value;
+      const stemNotice = document.getElementById('stemNotice');
+      const stemNoticeText = document.getElementById('stemNoticeText');
+
+      if (selectVal === 'custom') {
+        document.getElementById('lessonName').value = '';
+        document.getElementById('nlsCode').value = '';
+        document.getElementById('coreContent').value = '';
+        stemNotice.classList.add('hidden');
+        return;
+      }
+
+      const lessonData = TOAN10_DATABASE[parseInt(selectVal)];
+      if (lessonData) {
+        document.getElementById('lessonName').value = lessonData.name;
+        document.getElementById('duration').value = lessonData.periods;
+        document.getElementById('nlsCode').value = lessonData.nls;
+        document.getElementById('coreContent').value = lessonData.yccd || '';
+
+        if (lessonData.stem) {
+          stemNotice.classList.remove('hidden');
+          stemNoticeText.textContent = lessonData.stem;
         } else {
-            selectedKeywords.push(keyword);
-            btnEl.classList.add("selected");
-            btnEl.innerText = `✓ ${keyword}`;
+          stemNotice.classList.add('hidden');
         }
-        document.getElementById("keywordsInput").value = selectedKeywords.join(", ");
+      }
     }
 
-    function clearKeywords() {
-        selectedKeywords = [];
-        document.getElementById("keywordsInput").value = "";
-        document.querySelectorAll(".tag-btn").forEach(btn => {
-            btn.classList.remove("selected");
-            btn.innerText = `+ ${btn.innerText.replace(/^[+✓]\s*/, '')}`;
-        });
-    }
+    // AI TRÍCH XUẤT NGUYÊN VĂN KHUNG MỤC TIÊU SGK (DÙNG GEMINI-3.6-FLASH)
+    async function fetchCoreContentFromAI() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      if (!apiKey) {
+        alert('Vui lòng nhập Gemini API Key ở ô phía trên để sử dụng AI trích xuất.');
+        return;
+      }
+      localStorage.setItem('local_gemini_api_key', apiKey);
 
-    function buildEmptyRows() {
-        const practiceBox = document.getElementById("practiceContainer");
-        const testBox = document.getElementById("testContainer");
-        practiceBox.innerHTML = "";
-        testBox.innerHTML = "";
-        practiceQuestionsCount = 20;
+      const lessonName = document.getElementById('lessonName').value.trim();
+      if (!lessonName) {
+        alert('Vui lòng chọn hoặc nhập tên bài học trước.');
+        return;
+      }
 
-        practiceBox.innerHTML += `<div class="part-header tl" id="practiceHeaderLabel">BÀI TẬP RÈN LUYỆN (BÀI 1 - ${practiceQuestionsCount})</div>`;
-        for (let i = 1; i <= 20; i++) {
-            const isVdc = i >= 18;
-            practiceBox.innerHTML += createQuestionCardHtml(i, "practice", isVdc ? "VDC" : "TL");
-        }
+      const loading = document.getElementById('loadingOverlay');
+      const loadingMsg = document.getElementById('loadingMessage');
+      loadingMsg.textContent = 'Đang tra cứu khung kiến thức SGK Toán 10 Kết nối tri thức (Gemini 3.6 Flash)...';
+      loading.classList.remove('hidden');
 
-        testBox.innerHTML += `<div class="part-header tn">PHẦN I: TRẮC NGHIỆM (CÂU 1 - 7)</div>`;
-        for (let i = 1; i <= 7; i++) {
-            testBox.innerHTML += createQuestionCardHtml(i, "test", "TN");
-        }
+      const promptExtract = `Bạn là chuyên gia phương pháp môn Toán. Hãy trích xuất CHÍNH XÁC phần khung đóng (mục tiêu/yêu cầu cần đạt) nằm ở ngay ĐẦU BÀI HỌC (bắt đầu bằng câu "Học xong bài này, bạn có thể:" hoặc "Học xong bài này, bạn sẽ:") trong SGK TOÁN 10 (Tập 1 hoặc Tập 2 hoặc Chuyên đề học tập) bộ sách KẾT NỐI TRI THỨC VỚI CUỘC SỐNG:
+Bài học: "${lessonName}".
 
-        testBox.innerHTML += `<div class="part-header tl" style="margin-top:16px;">PHẦN II: TỰ LUẬN (CÂU 8 - 10 CÓ DÒNG KẺ)</div>`;
-        for (let i = 8; i <= 10; i++) {
-            testBox.innerHTML += createQuestionCardHtml(i, "test", "TL");
-        }
-        updatePracticeCountBadge();
-    }
+Yêu cầu xuất ra:
+- Trích đúng nguyên văn các dấu gạch đầu dòng (bullet points) của khung SGK.
+- Không giải thích lan man, không chào hỏi, không sinh thêm văn bản thừa.`;
 
-    function updatePracticeCountBadge() {
-        const badge = document.getElementById("practiceCountBadge");
-        if (badge) badge.innerText = `${practiceQuestionsCount} bài`;
-        const headerLbl = document.getElementById("practiceHeaderLabel");
-        if (headerLbl) headerLbl.innerText = `BÀI TẬP RÈN LUYỆN (BÀI 1 - ${practiceQuestionsCount})`;
-    }
-
-    function addPracticeQuestion(isVDC = false, initialContent = "") {
-        practiceQuestionsCount++;
-        const practiceBox = document.getElementById("practiceContainer");
-        const cardHtml = createQuestionCardHtml(practiceQuestionsCount, "practice", isVDC ? "VDC" : "TL", initialContent);
-        practiceBox.insertAdjacentHTML('beforeend', cardHtml);
-        updatePracticeCountBadge();
-        const newInp = document.getElementById(`practice_${practiceQuestionsCount}`);
-        if (newInp) newInp.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function removeLastPracticeQuestion() {
-        if (practiceQuestionsCount <= 1) {
-            alert("Phải giữ lại ít nhất 1 bài rèn luyện!");
-            return;
-        }
-        const card = document.getElementById(`practice_card_${practiceQuestionsCount}`);
-        if (card) card.remove();
-        practiceQuestionsCount--;
-        updatePracticeCountBadge();
-    }
-
-    async function addPracticeVdcWithAI() {
-        const apiKey = document.getElementById("apiKey").value.trim();
-        const modelName = document.getElementById("modelName").value.trim() || "gemini-3.6-flash";
-        const lessonName = document.getElementById("lessonName").value.trim() || "Chuyên đề bài học";
-        const keywords = document.getElementById("keywordsInput").value.trim();
-
-        if (!apiKey) {
-            alert("Vui lòng dán Gemini API Key ở góc trên trước!");
-            return;
-        }
-
-        const btn = document.getElementById("btnAiVdc");
-        btn.disabled = true;
-        btn.innerText = "⚡ Đang biên soạn bài VD/VDC...";
-
-        const prompt = `Bạn là chuyên gia sư phạm Toán học THCS & THPT Việt Nam.
-Nhiệm vụ: Biên soạn đúng 1 bài toán Vận dụng hoặc Vận dụng cao (VD - VDC) thật hay, phân loại tư duy học sinh khá giỏi cho chủ đề: "${lessonName}" (Toán ${currentSelectedGrade}).
-Từ khóa gợi ý: ${keywords || "Nâng cao, phát triển tư duy, ứng dụng thực tế"}.
-
-QUY TẮC:
-- Đề bài tự luận ngắn gọn 1-3 dòng, giàu tính tư duy hoặc tình huống thực tế/phân loại.
-- Toàn bộ công thức toán viết dạng LaTeX inline $...$.
-- CHỈ TRẢ VỀ DUY NHẤT ĐỀ BÀI TOÁN, không ghi lời giải, không ghi tiêu đề [P...] hay chữ "Bài 1:".`;
-
-        try {
-            const rawText = await callGeminiDirect(apiKey, modelName, [{ text: prompt }], null);
-            let cleaned = rawText.trim().replace(/^(?:Bài|Câu|Đề bài)\s*\d*[\:\.]\s*/i, '').trim();
-            addPracticeQuestion(true, cleaned);
-        } catch (err) {
-            alert("Lỗi khi tạo câu VD/VDC: " + err.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "⚡ AI tạo câu VD - VDC";
-        }
-    }
-
-    function createQuestionCardHtml(i, prefix, type, initialVal = "") {
-        const isPractice = prefix === "practice";
-        const isVdc = type === "VDC";
-        const labelText = isPractice ? `Bài ${i} (Rèn luyện ${isVdc ? 'VD - VDC' : 'tự luận'})` : `Câu ${i} (Kiểm tra)`;
-        const badgeClass = type === "TN" ? "badge-tn" : (isVdc ? "badge-vdc" : "badge-tl");
-        const badgeText = type === "TN" ? "Trắc nghiệm" : (isVdc ? "VD - VDC" : "Tự luận");
-        const placeholder = isPractice
-            ? `Nội dung Bài ${i} rèn luyện ${isVdc ? 'nâng cao VD/VDC' : 'tự luận'}...`
-            : (type === "TN" 
-                ? `Nội dung Câu ${i} kiểm tra (kèm 4 phương án \\choice{...}{...}{...}{...})...` 
-                : `Nội dung Câu ${i} kiểm tra tự luận...`);
-
-        const valEscaped = initialVal ? initialVal.replace(/"/g, '&quot;') : "";
-
-        return `
-            <div class="question-card" id="${prefix}_card_${i}">
-                <div class="q-header">
-                    <span class="q-label">
-                        ${labelText}
-                        <span class="badge-type ${badgeClass}">${badgeText}</span>
-                    </span>
-                </div>
-                <input type="text" class="q-input" id="${prefix}_${i}" placeholder="${placeholder}" value="${valEscaped}">
-            </div>
-        `;
-    }
-
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    function parseCustomDelimitedData(text) {
-        const extractByKeys = (keys) => {
-            for (let key of keys) {
-                const pattern = `(?:\\[|\\*\\*\\[|#+\\s*\\[)(${key})(?:\\]|\\]\\*\\*|\\:\\s*\\]|\\:)`;
-                const regex = new RegExp(pattern + `([\\s\\S]*?)(?=(?:\\[|\\*\\*\\[|#+\\s*\\[)[A-Za-z0-9_\\s]+(?:\\]|\\:)|\$)`, "i");
-                const match = text.match(regex);
-                if (match && match[2] && match[2].trim().length > 0) {
-                    let val = match[2].trim();
-                    val = val.replace(/\\n\\s*(?:PHẦN\\s+[I|V|X|0-9]+|MỤC\\s+[I|V|X|0-9]+)[^\\n]*$/i, '').trim();
-                    return val;
-                }
-            }
-            return "";
-        };
-
-        const lessonName = extractByKeys(["LESSON_NAME", "TEN_BAI", "CHUDE"]);
-        const theorySummary = extractByKeys(["THEORY_SUMMARY", "LY_THUYET", "KIEN_THUC"]);
-
-        const practice = [];
-        for (let i = 1; i <= 20; i++) {
-            practice.push(extractByKeys([`P${i}`, `P_${i}`, `BAI_${i}`, `BÀI ${i}`, `B${i}`]));
-        }
-
-        const test = [];
-        for (let i = 1; i <= 10; i++) {
-            let aliases = [`T${i}`, `T_${i}`, `CAU_${i}`, `CÂU ${i}`, `C${i}`];
-            if (i >= 8) {
-                aliases.push(`TL${i - 7}`, `TL${i}`, `TU_LUAN_${i - 7}`, `TỰ LUẬN ${i - 7}`);
-            }
-            test.push(extractByKeys(aliases));
-        }
-
-        return { lessonName, theorySummary, practice, test };
-    }
-
-    async function callGeminiDirect(apiKey, modelName, parts, statusEl) {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-        
-        let attempts = 0;
-        const maxAttempts = 3;
-
-        while (attempts < maxAttempts) {
-            try {
-                const response = await fetch(endpoint, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ role: "user", parts: parts }],
-                        generationConfig: {
-                            temperature: 0.35,
-                            maxOutputTokens: 8192
-                        }
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.status === 503 || response.status === 429 || (data.error && [503, 429].includes(data.error.code))) {
-                    attempts++;
-                    if (attempts < maxAttempts) {
-                        const waitTime = attempts * 2000;
-                        if (statusEl) {
-                            statusEl.innerText = `Máy chủ bận, tự động thử lại sau ${waitTime / 1000}s (Lần ${attempts})...`;
-                        }
-                        await new Promise(res => setTimeout(res, waitTime));
-                        continue;
-                    }
-                }
-
-                if (!response.ok || data.error) {
-                    const errCode = data.error ? data.error.code : response.status;
-                    const errMsg = data.error ? data.error.message : response.statusText;
-                    throw new Error(`Google API báo lỗi (${errCode}): ${errMsg}`);
-                }
-
-                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-                    throw new Error("Không nhận được nội dung phản hồi từ AI.");
-                }
-
-                const candidate = data.candidates[0];
-                if (candidate.finishReason === "MAX_TOKENS" && statusEl) {
-                    statusEl.innerText = "Cảnh báo: Nội dung dài quá mức giới hạn token. Hãy bấm Phân tích lại để tạo bản cô đọng hơn.";
-                }
-
-                return candidate.content.parts[0].text;
-            } catch (networkErr) {
-                attempts++;
-                if (attempts >= maxAttempts) throw networkErr;
-                await new Promise(res => setTimeout(res, 2000));
-            }
-        }
-    }
-
-    async function analyzePdfAndSuggest() {
-        const apiKey = document.getElementById("apiKey").value.trim();
-        const modelName = document.getElementById("modelName").value.trim() || "gemini-3.6-flash";
-        const fileInput = document.getElementById("pdfFile");
-        const pdfUrl = document.getElementById("pdfUrl").value.trim();
-        const keywords = document.getElementById("keywordsInput").value.trim();
-        const diffSelect = document.getElementById("difficultyLevel");
-        const diffText = diffSelect.options[diffSelect.selectedIndex].text;
-
-        if (!apiKey) {
-            alert("Vui lòng nhập Gemini API Key!");
-            return;
-        }
-        localStorage.setItem("gemini_api_key", apiKey);
-
-        if (!fileInput.files[0] && !pdfUrl && !keywords) {
-            alert("Vui lòng tải tệp PDF hoặc nhập Tên bài học / Chọn từ khóa!");
-            return;
-        }
-
-        const btn = document.getElementById("btnAnalyze");
-        const status = document.getElementById("analyzeStatus");
-
-        btn.disabled = true;
-        status.innerText = `Đang kết nối tới ${modelName}...`;
-
-        const promptText = `Bạn là chuyên gia sư phạm Toán học THCS & THPT Việt Nam.
-Nhiệm vụ: Soạn thảo một bộ tài liệu học tập toàn diện gồm 2 phần liên kết chặt chẽ:
-
--CÁC CÔNG THỨC TOÁN BẮT BUỘC ĐỂ INLINE TRONG DẤU $$
--Phần trắc nghiệm của phần kiểm tra phải rà soát phương án trùng.
--ĐỀ BÀI ĐẢM BẢO TÍNH CHÍNH XÁC ĐẦY ĐỦ. NẾU GẶP CÁC DẠNG TOÁN THỰC TẾ NÊN TÌM KIẾM CÁC BÀI ĐÃ TỪNG XUẤT HIỆN (NẾU CÓ THỂ).
-
-QUY TẮC BẮT BUỘC ĐỂ KHÔNG BỊ CẮT CÂU VÀ KHÔNG BỊ TRÀN TOKEN:
-- TUYỆT ĐỐI KHÔNG XUẤT LỜI GIẢI, KHÔNG LỜI DẪN, KHÔNG GIẢI THÍCH DÀI DÒNG.
-- BẮT BUỘC XUẤT ĐỦ 100% TỪ [P1] ĐẾN [P20] VÀ TỪ [T1] ĐẾN [T10]. TUYỆT ĐỐI KHÔNG DỪNG SỚM HOẶC BỎ DỞ Ở [T7]-[T10].
-
-1. PHẦN 1: TÓM TẮT KIẾN THỨC & 20 BÀI TỰ LUẬN RÈN LUYỆN TRÊN LỚP (P1 đến P20)
-- Tóm tắt kiến thức: 3 đến 5 gạch đầu dòng then chốt, mỗi ý 1 dòng ngắn gọn. Có xuống dòng sau mỗi ý.
-- 20 Bài rèn luyện trên lớp: TẤT CẢ LÀ BÀI TOÁN TỰ LUẬN (P1 đến P20), bao trùm các dạng toán sẽ gặp trong đề kiểm tra.
-
-2. PHẦN 2: BÀI KIỂM TRA ĐÁNH GIÁ TẠI LỚP (T1 đến T10)
-- Câu T1 đến T7: TRẮC NGHIỆM 4 phương án, bắt buộc dùng lệnh: \\choice{...}{...}{...}{...}, trong đó đánh dấu phương án đúng bằng \\True (ví dụ: \\choice{...}{\\True ...}{...}{...}).
-  ĐẶC BIỆT: Vị trí của phương án đúng \\True PHẢI ĐƯỢC XÁO TRỘN NGẪU NHIÊN giữa 4 vị trí (A, B, C, D) cho từng câu (KHÔNG ĐƯỢC luôn để ở vị trí đầu tiên).
-- Câu T8 đến T10: TỰ LUẬN.
-- Câu T10 là 1 câu vận dụng.
-
-3. TIÊU ĐỀ: Ngắn gọn (Ví dụ: "ƯỚC CHUNG LỚN NHẤT", "KHẢO SÁT HÀM SỐ").
-
-Khối lớp: Toán ${currentSelectedGrade}
-Tên bài/Chủ đề: ${pdfUrl}
-Từ khóa: ${keywords}
-Mức độ: ${diffText}
-
-BẮT BUỘC TRẢ VỀ THEO CÁC THẺ SAU (KHÔNG DÙNG JSON):
-[LESSON_NAME]
-<Tên bài học thật ngắn gọn, viết hoa>
-[THEORY_SUMMARY]
-<Tóm tắt 3-5 ý lý thuyết then chốt. BẮT BUỘC mỗi ý viết trên 1 DÒNG RIÊNG BIỆT (xuống dòng rõ ràng bằng Enter), dùng công thức Toán LaTeX inline $...$>
-[P1]
-Đề bài rèn luyện 1 (tự luận)
-[P2]
-Đề bài rèn luyện 2 (tự luận)
-[P3]
-Đề bài rèn luyện 3 (tự luận)
-[P4]
-Đề bài rèn luyện 4 (tự luận)
-[P5]
-Đề bài rèn luyện 5 (tự luận)
-[P6]
-Đề bài rèn luyện 6 (tự luận)
-[P7]
-Đề bài rèn luyện 7 (tự luận)
-[P8]
-Đề bài rèn luyện 8 (tự luận)
-[P9]
-Đề bài rèn luyện 9 (tự luận)
-[P10]
-Đề bài rèn luyện 10 (tự luận)
-[P11]
-Đề bài rèn luyện 11 (tự luận)
-[P12]
-Đề bài rèn luyện 12 (tự luận)
-[P13]
-Đề bài rèn luyện 13 (tự luận)
-[P14]
-Đề bài rèn luyện 14 (tự luận)
-[P15]
-Đề bài rèn luyện 15 (tự luận)
-[P16]
-Đề bài rèn luyện 16 (tự luận)
-[P17]
-Đề bài rèn luyện 17 (tự luận)
-[P18]
-Đề bài rèn luyện 18 (tự luận)
-[P19]
-Đề bài rèn luyện 19 (tự luận)
-[P20]
-Đề bài rèn luyện 20 (tự luận nâng cao/vận dụng)
-[T1]
-Đề kiểm tra trắc nghiệm 1 \\choice{Phương án A}{\\True Phương án B đúng}{Phương án C}{Phương án D}
-[T2]
-Đề kiểm tra trắc nghiệm 2 \\choice{A}{B}{C}{D}
-[T3]
-Đề kiểm tra trắc nghiệm 3 \\choice{A}{B}{C}{D}
-[T4]
-Đề kiểm tra trắc nghiệm 4 \\choice{A}{B}{C}{D}
-[T5]
-Đề kiểm tra trắc nghiệm 5 \\choice{A}{B}{C}{D}
-[T6]
-Đề kiểm tra trắc nghiệm 6 \\choice{A}{B}{C}{D}
-[T7]
-Đề kiểm tra trắc nghiệm 7 \\choice{A}{B}{C}{D}
-[T8]
-Đề kiểm tra tự luận 8
-[T9]
-Đề kiểm tra tự luận 9
-[T10]
-Đề kiểm tra tự luận 10`;
-
-        try {
-            let requestParts = [];
-
-            if (fileInput.files[0]) {
-                status.innerText = "Đang nạp tệp tài liệu PDF...";
-                const base64Data = await fileToBase64(fileInput.files[0]);
-                requestParts.push({
-                    inline_data: {
-                        mime_type: "application/pdf",
-                        data: base64Data
-                    }
-                });
-            }
-
-            requestParts.push({ text: promptText });
-            status.innerText = `Đang thiết lập lý thuyết, 20 bài rèn luyện và 10 câu kiểm tra...`;
-
-            const rawText = await callGeminiDirect(apiKey, modelName, requestParts, status);
-            const result = parseCustomDelimitedData(rawText);
-
-            if (result.lessonName) document.getElementById("lessonName").value = result.lessonName;
-            if (result.theorySummary) document.getElementById("theorySummary").value = result.theorySummary;
-
-            result.practice.forEach((content, idx) => {
-                const inputEl = document.getElementById(`practice_${idx + 1}`);
-                if (inputEl && content) inputEl.value = content;
-            });
-
-            result.test.forEach((content, idx) => {
-                const inputEl = document.getElementById(`test_${idx + 1}`);
-                if (inputEl && content) inputEl.value = content;
-            });
-
-            status.innerText = `Thành công: Đã biên soạn đủ Lý thuyết + 20 Bài rèn luyện + 10 Câu kiểm tra!`;
-        } catch (err) {
-            status.innerText = err.message;
-            alert(err.message);
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
-    function shuffleChoiceInText(text) {
-        const choiceIdx = text.indexOf('\\choice');
-        if (choiceIdx === -1) return text;
-
-        const beforeChoice = text.substring(0, choiceIdx);
-        let afterChoice = text.substring(choiceIdx + 7);
-
-        let options = [];
-        let i = 0;
-        while (i < afterChoice.length && options.length < 4) {
-            if (afterChoice[i] === '{') {
-                let depth = 1;
-                let start = i + 1;
-                i++;
-                while (i < afterChoice.length && depth > 0) {
-                    if (afterChoice[i] === '{') depth++;
-                    else if (afterChoice[i] === '}') depth--;
-                    i++;
-                }
-                if (depth === 0) {
-                    options.push(afterChoice.substring(start, i - 1));
-                }
-            } else {
-                i++;
-            }
-        }
-
-        if (options.length === 4) {
-            const remainingAfter = afterChoice.substring(i);
-            // Thuật toán xáo trộn ngẫu nhiên Fisher-Yates
-            for (let j = options.length - 1; j > 0; j--) {
-                const k = Math.floor(Math.random() * (j + 1));
-                [options[j], options[k]] = [options[k], options[j]];
-            }
-            return `${beforeChoice}\\choice\n{${options[0]}}\n{${options[1]}}\n{${options[2]}}\n{${options[3]}}${remainingAfter}`;
-        }
-
-        return text;
-    }
-
-    function generateLatex() {
-        const lessonName = document.getElementById("lessonName").value.trim() || "CHUYÊN ĐỀ BÀI TẬP";
-        const theorySummary = document.getElementById("theorySummary").value.trim();
-
-        // 1. Kiểm tra dữ liệu đầu vào (lấy động toàn bộ câu hỏi Phần 1 hiện có)
-        const practiceInputEls = document.querySelectorAll("[id^='practice_']:not([id^='practice_card_'])");
-        let emptyPractice = 0;
-        let practiceItems = [];
-        practiceInputEls.forEach((inp, idx) => {
-            const val = inp.value.trim();
-            if (!val) emptyPractice++;
-            practiceItems.push(val || `Bài tập rèn luyện ${idx + 1}`);
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptExtract }] }],
+            generationConfig: { temperature: 0.1 }
+          })
         });
 
-        let emptyTest = 0;
-        let testItems = [];
-        for (let i = 1; i <= 10; i++) {
-            const val = document.getElementById(`test_${i}`).value.trim();
-            if (!val) emptyTest++;
-            testItems.push(val || `Câu hỏi kiểm tra ${i}`);
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+
+        const extractedText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+        if (extractedText) {
+          document.getElementById('coreContent').value = extractedText;
         }
+      } catch (err) {
+        alert('Lỗi tra cứu: ' + err.message);
+      } finally {
+        loading.classList.add('hidden');
+      }
+    }
 
-        if (emptyPractice > 0 || emptyTest > 0) {
-            const ok = confirm(`Cảnh báo: Đang có ${emptyPractice} bài rèn luyện và ${emptyTest} câu kiểm tra chưa có nội dung.\nBạn có muốn tiếp tục xuất mã LaTeX không?`);
-            if (!ok) return;
-        }
+    // XÂY DỰNG PROMPT CHI TIẾT - KHÔNG PREAMBLE - KÝ DUYỆT TỔ TRƯỞNG (CHỖ NGÀY THÁNG ĐỂ TRỐNG)
+    function buildFullPrompt(params) {
+      return `Hãy đóng vai là một chuyên gia phương pháp giảng dạy môn Toán THPT và là lập trình viên LaTeX giỏi. 
+Hãy biên soạn phần NỘI DUNG Kế hoạch bài dạy (Giáo án) môn Toán định dạng mã nguồn LaTeX thật CHI TIẾT, CHUẨN MỰC SƯ PHẠM TOÁN HỌC.
 
-        const dotfillLines = Array(8).fill('.\\dotfill\\\\[0.28cm]').join('\n');
-
-        // Xử lý tách dòng lý thuyết thông minh
-        let theoryItems = [];
-        if (theorySummary) {
-            let normalized = theorySummary
-                .replace(/\.\s*\*\s*/g, '\n')
-                .replace(/\s*[•●■◆]\s*/g, '\n');
-
-            let rawLines = normalized.split(/\n|\r\n/).map(l => l.trim()).filter(l => l.length > 0);
-
-            rawLines.forEach(line => {
-                let cleaned = line.replace(/^[\-\+\*•●■◆\d+\.\)]\s*/, '').trim();
-                cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '\\textbf{$1}');
-                cleaned = cleaned.replace(/\*/g, '').trim();
-                if (cleaned) {
-                    theoryItems.push(cleaned);
-                }
-            });
-        }
-
-        if (theoryItems.length === 0) {
-            theoryItems.push("\\textbf{Kiến thức trọng tâm:} Nắm vững các định nghĩa và công thức then chốt của bài học.");
-        }
-
-        let theoryItemsLatex = theoryItems.map(it => `    \\item ${it}`).join('\n');
-
-        // Tạo phần 1: Tiêu đề + KHUNG LÝ THUYẾT ĐÓNG KHUNG TIKZ + Toàn bộ bài rèn luyện
-        let p1Latex = `% ================= PHẦN 1: BÀI TẬP RÈN LUYỆN =================
-\\begin{minipage}[c]{0.25\\textwidth}
-\\includegraphics[width=0.8\\linewidth]{data/Logos.png}
+==================================================
+QUY TẮC CẤU TRÚC VÀ CÚ PHÁP LATEX (TUYỆT ĐỐI TUÂN THỦ)
+==================================================
+1. TUYỆT ĐỐI KHÔNG XUẤT PREAMBLE:
+   - KHÔNG viết \\documentclass, KHÔNG viết \\usepackage, KHÔNG viết \\begin{document} và \\end{document}.
+   - Mã bắt đầu trực tiếp từ khối minipage Header bên dưới và kết thúc ở phần KÝ DUYỆT CỦA TỔ TRƯỞNG VÀ GIÁO VIÊN.
+2. TUYỆT ĐỐI KHÔNG gõ nhầm lệnh \\begin dính với số hoặc chữ cái (Ví dụ TUYỆT ĐỐI CẤM: \\begin1., \\begin2., \\begin a.,...). Để liệt kê các bước trong hộp nhiemvu, dùng dấu gạch đầu dòng "+" kèm dấu xuống dòng "\\\\" hoặc dùng môi trường chuẩn "\\begin{enumerate} \\item ... \\end{enumerate}".
+3. TUYỆT ĐỐI KHÔNG dùng ký tự "&" đơn lẻ ngoài môi trường bảng biểu (tabular, tabularx) hoặc toán hệ (align, cases). Muốn in ký tự "&" ra chữ thường phải viết là "\\&".
+4. Khối Header BẮT BUỘC dùng mẫu sau:
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\textbf{TỔ: ${params.departmentName}}\\par
+    \\textbf{GV thực hiện:} ${params.teacherName}
 \\end{minipage}
-\\hspace{0.5cm}
-\\begin{minipage}[c]{0.7\\textwidth}
-{\\LARGE\\color{blue!70!red}\\bfseries BÀI TẬP RÈN LUYỆN: ${lessonName}}
+\\hfill
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\raggedleft
+    \\textbf{KẾ HOẠCH BÀI DẠY TOÁN 10}\\par
+    \\textit{Định hướng tích hợp NLS - Theo PPCT}
 \\end{minipage}
-
-\\vspace{0.35cm}
+\\vspace{0.5cm}
 
 \\begin{center}
-\\begin{tikzpicture}
-\\node[draw=blue!70!black, fill=blue!2, line width=0.8pt, rounded corners=5pt, inner sep=9pt, text width=0.96\\textwidth] {
-    {\\bfseries\\large\\color{blue!80!black} I. TÓM TẮT KIẾN THỨC CẦN NHỚ}\\par\\vspace{0.15cm}
-    \\begin{itemize}[leftmargin=0.55cm, itemsep=3pt, topsep=1pt]
-${theoryItemsLatex}
-    \\end{itemize}
-};
-\\end{tikzpicture}
+    {\\Large \\bfseries ${params.lessonName.toUpperCase()}}\\par
+    \\vspace{0.2cm}
+    \\textit{(Thời lượng: ${params.duration} tiết - Sách Kết nối tri thức với cuộc sống)}
 \\end{center}
 
-\\vspace{0.15cm}
-\\noindent\\textbf{\\large II. BÀI TẬP RÈN LUYỆN TRÊN LỚP}
-\\vspace{0.15cm}
-`;
+==================================================
+THÔNG TIN BÀI DẠY TOÁN 10
+==================================================
+1. Tên bài: ${params.lessonName}
+2. Giáo viên soạn: ${params.teacherName}
+3. Tổ trưởng chuyên môn ký duyệt: ${params.leaderName}
+4. Thời lượng: ${params.duration} tiết
+5. MÃ NLS THEO PPCT: "${params.nlsCode}"
+${params.stemInfo ? `6. CHỦ ĐỀ STEM / DỰ ÁN THỰC TIỄN LIÊN QUAN: ${params.stemInfo}` : ''}
+7. Công cụ số sử dụng: ${params.digitalTools}
+8. Yêu cầu cần đạt (Khung SGK):
+${params.coreContent}
 
-        // Xuất toàn bộ bài rèn luyện liên tục (không chèn newpage ở giữa)
-        practiceItems.forEach((content) => {
-            p1Latex += `\n\\begin{ex}\n${content}\n\\end{ex}`;
+==================================================
+YÊU CẦU SƯ PHẠM VỀ ĐỘ DÀI VÀ NỘI DUNG CHI TIẾT
+==================================================
+1. SOẠN CHI TIẾT VÀ ĐẦY ĐỦ CHO TỪNG TIẾT (TỪ TIẾT 1 ĐẾN TIẾT ${params.duration}):
+   - Không được viết sơ sài hay tóm lược ("tương tự", "...").
+   - Mỗi tiết học phải có đầy đủ: 
+     + Khởi động (tình huống thực tế/câu hỏi gợi mở có số liệu cụ thể).
+     + Hình thành kiến thức mới (định nghĩa, định lí, biến đổi đại số, lập luận toán học chặt chẽ).
+     + Bài tập ví dụ mẫu có LỜI GIẢI CHI TIẾT từng bước.
+     + Luyện tập và Vận dụng (nhiệm vụ học tập cụ thể, có sản phẩm dự kiến của học sinh).
+     + Hướng dẫn về nhà và chuẩn bị tiết sau.
+   - Nhiệm vụ học sinh đặt trong môi trường: \\begin{nhiemvu} ... \\end{nhiemvu}.
+2. TIẾT CHẾ MẬT ĐỘ NĂNG LỰC SỐ (TRÁNH LẠM DỤNG GƯỢNG ÉP):
+   - Không chèn NLS vào tất cả các hoạt động. Phần lớn bài dạy là giảng dạy Toán học tương tác tích cực sư phạm mực thước.
+   - Chỉ tích hợp NLS đúng 1 HOẶC 2 HOẠT ĐỘNG THEN CHỐT trong toàn bài (ví dụ: dùng Casio kiểm chứng hoặc dùng GeoGebra trực quan hóa đồ thị/hình học), gắn đúng mã PPCT: ${params.nlsCode}.
+
+==================================================
+CẤU TRÚC GIÁO ÁN BẮT BUỘC:
+==================================================
+I. MỤC TIÊU:
+   1. Về kiến thức, kĩ năng (bám sát khung đầu bài SGK).
+   2. Về năng lực: Năng lực toán học, Năng lực chung, Năng lực số (chỉ ghi mã cốt lõi: ${params.nlsCode}).
+   3. Về phẩm chất.
+II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU
+III. TIẾN TRÌNH DẠY HỌC (Chi tiết hoàn chỉnh từ Tiết 1 đến Tiết ${params.duration})
+IV. BẢNG PHÂN TÍCH HOẠT ĐỘNG PHÁT TRIỂN NLS (Bảng ngắn gọn 1-2 dòng thể hiện đúng điểm chạm tích hợp NLS trong bài).
+V. KÝ DUYỆT GIÁO ÁN:
+Cuối giáo án BẮT BUỘC dùng cấu trúc minipage sau (NGÀY THÁNG ĐỂ TRỐNG DẠNG DẤU CHẤM ĐỂ TỰ ĐIỀN TAY):
+\\vspace{1cm}
+\\noindent
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\centering
+    \\textbf{DUYỆT CỦA TỔ TRƯỞNG CHUYÊN MÔN}\\par
+    \\textit{Ngày ...... tháng ...... năm 20...}\\par
+    \\vspace{2.5cm}
+    \\textbf{${params.leaderName}}
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.48\\textwidth}
+    \\centering
+    \\textbf{GIÁO VIÊN SOẠN BÀI}\\par
+    \\textit{Ngày ...... tháng ...... năm 20...}\\par
+    \\vspace{2.5cm}
+    \\textbf{${params.teacherName}}
+\\end{minipage}`;
+    }
+
+    function sanitizeLatexCode(latex) {
+      let fixed = latex.replace(/\\begin\s*(\d+)\./g, '+ $1.');
+      fixed = fixed.replace(/\\end\s*(\d+)\./g, '');
+
+      // Loại bỏ hoàn toàn preamble nếu mô hình vẫn sinh ra
+      fixed = fixed.replace(/\\documentclass[\s\S]*?\\begin\{document\}/i, '');
+      fixed = fixed.replace(/\\end\{document\}/gi, '');
+
+      const lines = fixed.split('\n');
+      let insideMathOrTable = false;
+
+      const cleanedLines = lines.map(line => {
+        if (/\\begin\{(tabular|tabularx|array|align|cases|matrix|bmatrix|pmatrix|vmatrix)\}/.test(line)) {
+          insideMathOrTable = true;
+          return line;
+        }
+        if (/\\end\{(tabular|tabularx|array|align|cases|matrix|bmatrix|pmatrix|vmatrix)\}/.test(line)) {
+          insideMathOrTable = false;
+          return line;
+        }
+
+        if (!insideMathOrTable) {
+          return line.replace(/(?<!\\)&/g, '\\&');
+        }
+        return line;
+      });
+
+      return cleanedLines.join('\n').trim();
+    }
+
+    // TẠO GIÁO ÁN CHI TIẾT QUA GEMINI 3.6 FLASH
+    async function generateLessonPlan() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      if (!apiKey) {
+        alert('Vui lòng nhập Gemini API Key của bạn để sử dụng.');
+        return;
+      }
+      localStorage.setItem('local_gemini_api_key', apiKey);
+
+      const durationVal = parseInt(document.getElementById('duration').value) || 1;
+      const durationClamped = Math.max(1, Math.min(9, durationVal));
+
+      const stemNotice = document.getElementById('stemNotice');
+      const stemInfo = !stemNotice.classList.contains('hidden') ? document.getElementById('stemNoticeText').textContent : '';
+
+      const params = {
+        teacherName: document.getElementById('teacherName').value.trim() || 'Hoàng Xuân Định',
+        leaderName: document.getElementById('leaderName').value.trim() || 'Nông Thế Hưng',
+        departmentName: document.getElementById('departmentName').value.trim() || 'TOÁN - SINH - CÔNG NGHỆ',
+        duration: durationClamped,
+        nlsDensity: document.getElementById('nlsDensity').value,
+        lessonName: document.getElementById('lessonName').value.trim(),
+        nlsCode: document.getElementById('nlsCode').value.trim(),
+        stemInfo: stemInfo,
+        sourceUrl: document.getElementById('sourceUrl').value.trim(),
+        digitalTools: document.getElementById('digitalTools').value.trim(),
+        coreContent: document.getElementById('coreContent').value.trim()
+      };
+
+      const prompt = buildFullPrompt(params);
+      const loading = document.getElementById('loadingOverlay');
+      const loadingMsg = document.getElementById('loadingMessage');
+      const output = document.getElementById('outputLatex');
+      const btnCopy = document.getElementById('btnCopy');
+      const btnGen = document.getElementById('btnGenerate');
+
+      loadingMsg.textContent = 'Đang khởi tạo kế hoạch bài dạy chi tiết từng hoạt động (Gemini 3.6 Flash)...';
+      loading.classList.remove('hidden');
+      btnGen.disabled = true;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.25
+            }
+          })
         });
 
-        // Tạo phần 2: Bài kiểm tra đánh giá (7 TN + 3 TL)
-        // CHỈ CÓ DUY NHẤT 1 LỆNH \newpage Ở ĐÂY
-        let p2Latex = `\n\n\\newpage\n% ================= PHẦN 2: BÀI KIỂM TRA ĐÁNH GIÁ =================
-\\setcounter{ex}{0}
-\\begin{minipage}[c]{0.25\\textwidth}
-\\includegraphics[width=0.8\\linewidth]{data/Logos.png}
-\\end{minipage}
-\\hspace{0.5cm}
-\\begin{minipage}[c]{0.7\\textwidth}
-{\\LARGE\\color{blue!70!red}\\bfseries BÀI KIỂM TRA ĐÁNH GIÁ: ${lessonName}}
-\\end{minipage}
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
 
-\\vspace{0.4cm}
+        let latexCode = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        latexCode = latexCode.replace(/^```latex\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '');
+        latexCode = sanitizeLatexCode(latexCode);
 
-\\textbf{Họ và tên:} \\dotfill
-
-\\begin{center}
-\\begin{tikzpicture}
-\\draw[line width=1pt] (0,0) rectangle (17.5,2.2);
-\\draw[line width=1pt] (4.5,0) -- (4.5,2.2);
-
-\\node[font=\\bfseries] at (2.25,2.5) {Điểm};
-\\node[font=\\bfseries] at (11.25,2.5) {Nhận xét};
-\\end{tikzpicture}
-\\end{center}
-
-\\noindent\\textbf{\\large I. PHẦN TRẮC NGHIỆM}
-\\vspace{0.2cm}
-`;
-
-        // Câu 1 đến Câu 7 (Trắc nghiệm - Tự động xáo trộn ngẫu nhiên vị trí phương án đúng \True)
-        const isShuffleEnabled = document.getElementById("shuffleCheckbox") ? document.getElementById("shuffleCheckbox").checked : true;
-        for (let i = 0; i < 7; i++) {
-            let qContent = testItems[i];
-            if (isShuffleEnabled) {
-                qContent = shuffleChoiceInText(qContent);
-            }
-            p2Latex += `\n\\begin{ex}\n${qContent}\n\\end{ex}`;
-        }
-
-        p2Latex += `\n\n\\noindent\\textbf{\\large II. PHẦN TỰ LUẬN}
-\\vspace{0.2cm}
-`;
-
-        // Câu 8 đến Câu 10 (Tự luận - Đảm bảo đủ 100% cả câu 9 và câu 10, mỗi câu đủ 8 dòng dotfill)
-        for (let i = 7; i < 10; i++) {
-            p2Latex += `\n\\begin{ex}\n${testItems[i]}\n\\end{ex}\n${dotfillLines}\n`;
-        }
-
-        const fullLatex = p1Latex + p2Latex;
-        document.getElementById("latexOutput").value = fullLatex;
-        alert("Đã tạo mã LaTeX thành công! Đầy đủ các bài rèn luyện, 7 trắc nghiệm và 3 tự luận có dòng kẻ.");
+        output.value = latexCode;
+        btnCopy.disabled = false;
+      } catch (err) {
+        alert('Lỗi khi gọi API: ' + err.message);
+      } finally {
+        loading.classList.add('hidden');
+        btnGen.disabled = false;
+      }
     }
 
     function copyLatex() {
-        const copyText = document.getElementById("latexOutput");
-        if (!copyText.value) return;
-        copyText.select();
-        navigator.clipboard.writeText(copyText.value);
-        alert("Đã sao chép toàn bộ mã LaTeX vào bộ nhớ tạm!");
+      const output = document.getElementById('outputLatex');
+      navigator.clipboard.writeText(output.value);
+      alert('Đã sao chép toàn bộ mã nguồn LaTeX nội dung vào clipboard!');
     }
-</script>
 
+    populateLessonOptions();
+  </script>
 </body>
 </html>
